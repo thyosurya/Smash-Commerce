@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Api\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Api\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Api\Admin\CrmSettingController as AdminCrmSettingController;
@@ -28,6 +29,7 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('/admin')->group(function () {
 	Route::get('/dashboard', [AdminDashboardController::class, 'index']);
+	Route::get('/reports', [AdminReportController::class, 'index']);
 	Route::get('/audit-logs', [AdminAuditLogController::class, 'index']);
 	Route::get('/crm-settings', [AdminCrmSettingController::class, 'show']);
 	Route::put('/crm-settings', [AdminCrmSettingController::class, 'update']);

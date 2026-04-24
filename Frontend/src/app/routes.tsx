@@ -47,7 +47,8 @@ export const router = createBrowserRouter([
     Component: AdminLayout,
     children: [
       { index: true, Component: Dashboard },
-      { path: 'sales', Component: SalesReport },
+      { path: 'reports', Component: SalesReport },
+      { path: 'sales', element: <Navigate to="/admin/reports" replace /> },
       { path: 'users', Component: UserAnalytics },
       { path: 'products', Component: ProductManagement },
       { path: 'audit', Component: AuditLog },

@@ -177,7 +177,7 @@ export default function Dashboard() {
             <h3 className="font-semibold" style={{ color: '#0F172A' }}>Inventory Growth</h3>
             <p className="text-xs" style={{ color: '#94A3B8' }}>7 hari terakhir (produk & user baru)</p>
           </div>
-          <button onClick={() => navigate('/admin/sales')} className="flex items-center gap-1 text-xs font-medium" style={{ color: '#1D4ED8' }}>
+          <button onClick={() => navigate('/admin/reports')} className="flex items-center gap-1 text-xs font-medium" style={{ color: '#1D4ED8' }}>
             Full Report <ChevronRight size={13} />
           </button>
         </div>
@@ -259,7 +259,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 gap-3">
         {[
           { label: 'Add Product', path: '/admin/products', color: '#0EA5E9', icon: Package },
-          { label: 'View Reports', path: '/admin/sales', color: '#10B981', icon: TrendingUp },
+          { label: 'View Reports', path: '/admin/reports', color: '#10B981', icon: TrendingUp },
           { label: 'User Analytics', path: '/admin/users', color: '#8B5CF6', icon: Users },
           { label: 'Audit Log', path: '/admin/audit', color: '#F59E0B', icon: BarChart3 },
         ].map(({ label, path, color, icon: Icon }) => (
