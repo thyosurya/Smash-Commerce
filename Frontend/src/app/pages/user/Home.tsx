@@ -239,7 +239,7 @@ export default function Home() {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="font-semibold" style={{ color: '#0F172A' }}>Categories</h2>
-                <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button>
+                {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button> */}
               </div>
               <div className="grid grid-cols-3 gap-2.5">
                 {CATEGORIES.map(cat => (
@@ -290,7 +290,7 @@ export default function Home() {
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-semibold" style={{ color: '#0F172A' }}>🔥 Best Sellers</h2>
-                    <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button>
+                    {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button> */}
                   </div>
                   <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4" style={{ scrollbarWidth: 'none' }}>
                     {featured.map(p => (
@@ -308,7 +308,7 @@ export default function Home() {
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-semibold" style={{ color: '#0F172A' }}>✨ New Arrivals</h2>
-                    <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button>
+                    {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button> */}
                   </div>
                   <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4" style={{ scrollbarWidth: 'none' }}>
                     {newArrivals.map(p => (
