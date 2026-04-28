@@ -10,6 +10,14 @@ interface ApiResponse<T> {
 
 export type AdminReportPeriod = '7d' | '30d' | '12m' | 'all';
 
+export interface AdminReportFilters {
+  status?: string | null;
+  category?: string | null;
+  paymentMethod?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+}
+
 export interface AdminReportSummary {
   totalSales: number;
   totalIncome: number;
@@ -63,6 +71,7 @@ export interface AdminSimpleBreakdownItem {
 
 export interface AdminReportData {
   period: AdminReportPeriod;
+  filters: AdminReportFilters;
   summary: AdminReportSummary;
   salesBreakdown: AdminReportBreakdownPoint[];
   topProducts: AdminTopProductReportItem[];
@@ -81,14 +90,32 @@ async function parseApiError(response: Response, fallbackMessage: string): Promi
   }
 }
 
-export async function fetchAdminReport(period: AdminReportPeriod): Promise<AdminReportData> {
+export async function fetchAdminReport(period: AdminReportPeriod, filters?: AdminReportFilters): Promise<AdminReportData> {
   const token = getAuthToken();
 
   if (!token) {
     throw new Error('Token login tidak ditemukan.');
   }
 
-  const response = await fetch(`/api/admin/reports?period=${period}`, {
+  const params = new URLSearchParams({ period });
+  
+  if (filters?.status) {
+    params.append('status', filters.status);
+  }
+  if (filters?.category) {
+    params.append('category', filters.category);
+  }
+  if (filters?.paymentMethod) {
+    params.append('paymentMethod', filters.paymentMethod);
+  }
+  if (filters?.startDate) {
+    params.append('startDate', filters.startDate);
+  }
+  if (filters?.endDate) {
+    params.append('endDate', filters.endDate);
+  }
+
+  const response = await fetch(`/api/admin/reports?${params.toString()}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',

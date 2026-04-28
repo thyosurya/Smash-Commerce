@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowDownToLine, BadgeDollarSign, FileSpreadsheet, Package, ReceiptText, Wallet } from 'lucide-react';
+import { Activity, ArrowDownToLine, BadgeDollarSign, FileSpreadsheet, Package, ReceiptText, Wallet, X } from 'lucide-react';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import {
   fetchAdminReport,
   type AdminReportData,
+  type AdminReportFilters,
   type AdminReportPeriod,
   type AdminReportBreakdownPoint,
   type AdminTransactionReportItem,
@@ -19,6 +20,13 @@ const PERIOD_OPTIONS: Array<{ value: AdminReportPeriod; label: string }> = [
 
 const INITIAL_DATA: AdminReportData = {
   period: '30d',
+  filters: {
+    status: null,
+    category: null,
+    paymentMethod: null,
+    startDate: null,
+    endDate: null,
+  },
   summary: {
     totalSales: 0,
     totalIncome: 0,
@@ -441,6 +449,13 @@ function TransactionTable({ rows }: { rows: AdminTransactionReportItem[] }) {
 
 export default function SalesReport() {
   const [period, setPeriod] = useState<AdminReportPeriod>('30d');
+  const [filters, setFilters] = useState<AdminReportFilters>({
+    status: null,
+    category: null,
+    paymentMethod: null,
+    startDate: null,
+    endDate: null,
+  });
   const [report, setReport] = useState<AdminReportData>(INITIAL_DATA);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -451,7 +466,7 @@ export default function SalesReport() {
     const loadReport = async () => {
       try {
         setLoading(true);
-        const data = await fetchAdminReport(period);
+        const data = await fetchAdminReport(period, filters);
         if (isMounted) {
           setReport(data);
           setError(null);
@@ -472,7 +487,7 @@ export default function SalesReport() {
     return () => {
       isMounted = false;
     };
-  }, [period]);
+  }, [period, filters]);
 
   const generatedAt = useMemo(() => formatDateTime(report.generatedAt), [report.generatedAt]);
 
@@ -531,6 +546,127 @@ export default function SalesReport() {
             </button>
           </div>
         </div>
+      </div>
+
+      <div className="rounded-2xl border bg-white p-4 shadow-sm" style={{ borderColor: '#E2E8F0' }}>
+        <h3 className="mb-3 text-sm font-semibold" style={{ color: '#0F172A' }}>Filter Laporan</h3>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
+          <div>
+            <label className="mb-1 block text-xs font-semibold" style={{ color: '#475569' }}>Status</label>
+            <select
+              value={filters.status || ''}
+              onChange={(e) => setFilters({ ...filters, status: e.target.value || null })}
+              className="w-full rounded-lg border px-3 py-2 text-xs"
+              style={{ borderColor: '#E2E8F0', color: '#0F172A' }}
+            >
+              <option value="">Semua Status</option>
+              {report.statusBreakdown.map((item) => (
+                <option key={item.label} value={item.label}>{item.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-semibold" style={{ color: '#475569' }}>Kategori</label>
+            <input
+              type="text"
+              placeholder="Cari kategori..."
+              value={filters.category || ''}
+              onChange={(e) => setFilters({ ...filters, category: e.target.value || null })}
+              className="w-full rounded-lg border px-3 py-2 text-xs"
+              style={{ borderColor: '#E2E8F0', color: '#0F172A' }}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-semibold" style={{ color: '#475569' }}>Metode Pembayaran</label>
+            <select
+              value={filters.paymentMethod || ''}
+              onChange={(e) => setFilters({ ...filters, paymentMethod: e.target.value || null })}
+              className="w-full rounded-lg border px-3 py-2 text-xs"
+              style={{ borderColor: '#E2E8F0', color: '#0F172A' }}
+            >
+              <option value="">Semua Metode</option>
+              {report.paymentMethods.map((item) => (
+                <option key={item.label} value={item.label}>{item.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-semibold" style={{ color: '#475569' }}>Tanggal Mulai</label>
+            <input
+              type="date"
+              value={filters.startDate || ''}
+              onChange={(e) => setFilters({ ...filters, startDate: e.target.value || null })}
+              className="w-full rounded-lg border px-3 py-2 text-xs"
+              style={{ borderColor: '#E2E8F0', color: '#0F172A' }}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-semibold" style={{ color: '#475569' }}>Tanggal Akhir</label>
+            <input
+              type="date"
+              value={filters.endDate || ''}
+              onChange={(e) => setFilters({ ...filters, endDate: e.target.value || null })}
+              className="w-full rounded-lg border px-3 py-2 text-xs"
+              style={{ borderColor: '#E2E8F0', color: '#0F172A' }}
+            />
+          </div>
+        </div>
+
+        {(filters.status || filters.category || filters.paymentMethod || filters.startDate || filters.endDate) && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {filters.status && (
+              <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: '#EFF6FF', color: '#1D4ED8' }}>
+                Status: {filters.status}
+                <button onClick={() => setFilters({ ...filters, status: null })} className="ml-1">
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {filters.category && (
+              <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: '#EFF6FF', color: '#1D4ED8' }}>
+                Kategori: {filters.category}
+                <button onClick={() => setFilters({ ...filters, category: null })} className="ml-1">
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {filters.paymentMethod && (
+              <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: '#EFF6FF', color: '#1D4ED8' }}>
+                Metode: {filters.paymentMethod}
+                <button onClick={() => setFilters({ ...filters, paymentMethod: null })} className="ml-1">
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {filters.startDate && (
+              <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: '#EFF6FF', color: '#1D4ED8' }}>
+                Dari: {filters.startDate}
+                <button onClick={() => setFilters({ ...filters, startDate: null })} className="ml-1">
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {filters.endDate && (
+              <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: '#EFF6FF', color: '#1D4ED8' }}>
+                Hingga: {filters.endDate}
+                <button onClick={() => setFilters({ ...filters, endDate: null })} className="ml-1">
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            <button
+              onClick={() => setFilters({ status: null, category: null, paymentMethod: null, startDate: null, endDate: null })}
+              className="text-xs font-semibold"
+              style={{ color: '#0F172A' }}
+            >
+              Reset Semua
+            </button>
+          </div>
+        )}
       </div>
 
       {error && (

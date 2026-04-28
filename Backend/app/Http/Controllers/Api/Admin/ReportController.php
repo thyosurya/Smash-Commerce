@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -15,8 +16,15 @@ class ReportController extends Controller
     public function index(Request $request): JsonResponse
     {
         $period = $request->query('period', '30d');
+        $status = $request->query('status');
+        $category = $request->query('category');
+        $paymentMethod = $request->query('paymentMethod');
+        $startDateCustom = $request->query('startDate');
+        $endDateCustom = $request->query('endDate');
+        
         $now = now();
-        $startDate = $this->resolveStartDate($period, $now);
+        $startDate = $startDateCustom ? Carbon::parse($startDateCustom)->startOfDay() : $this->resolveStartDate($period, $now);
+        $endDate = $endDateCustom ? Carbon::parse($endDateCustom)->endOfDay() : $now;
 
         $ordersQuery = Order::query()
             ->with([
@@ -27,6 +35,20 @@ class ReportController extends Controller
 
         if ($startDate !== null) {
             $ordersQuery->where('created_at', '>=', $startDate);
+        }
+        
+        $ordersQuery->where('created_at', '<=', $endDate);
+
+        if ($status !== null && $status !== '') {
+            $ordersQuery->where('status', $status);
+        }
+
+        if ($paymentMethod !== null && $paymentMethod !== '') {
+            $ordersQuery->where('payment_method', $paymentMethod);
+        }
+
+        if ($category !== null && $category !== '') {
+            $ordersQuery->whereHas('items', fn (Builder $q) => $q->where('product_category', $category), '>', 0);
         }
 
         $orders = $ordersQuery->get();
@@ -51,6 +73,13 @@ class ReportController extends Controller
         return response()->json([
             'data' => [
                 'period' => $period,
+                'filters' => [
+                    'status' => $status,
+                    'category' => $category,
+                    'paymentMethod' => $paymentMethod,
+                    'startDate' => $startDateCustom,
+                    'endDate' => $endDateCustom,
+                ],
                 'summary' => $summary,
                 'salesBreakdown' => $salesBreakdown,
                 'topProducts' => $topProducts,
