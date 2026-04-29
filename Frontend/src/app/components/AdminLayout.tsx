@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation, Link } from 'react-router';
-import { BarChart3, Users, Package, FileText, Settings, LogOut, FileBarChart2, ChevronRight, Menu, Zap } from 'lucide-react';
+import { BarChart3, Users, Package, FileText, Settings, LogOut, FileBarChart2, ChevronRight, Menu, Zap, Wrench } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useEffect, useState } from 'react';
 
@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { icon: FileBarChart2, label: 'Laporan', path: '/admin/reports' },
   { icon: Users, label: 'User Analytics', path: '/admin/users' },
   { icon: Package, label: 'Products', path: '/admin/products' },
+  { icon: Wrench, label: 'Stringing Service', path: '/admin/stringing-service' },
   { icon: FileText, label: 'Audit Log', path: '/admin/audit' },
   { icon: Settings, label: 'CRM Settings', path: '/admin/crm' },
 ];

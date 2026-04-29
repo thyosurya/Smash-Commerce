@@ -127,6 +127,11 @@ export default function Home() {
   const searched = searchQuery ? products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.brand.toLowerCase().includes(searchQuery.toLowerCase())) : null;
 
   const handleBuyNow = (product: Product) => {
+    if (!state.isAuthenticated) {
+      toast.error('Silakan login terlebih dahulu untuk berbelanja.');
+      navigate('/login');
+      return;
+    }
     clearCart();
     addToCart(product, 1, product.stringable ? { stringType: 'Yonex BG80', tension: 24 } : undefined);
     toast.success(`${product.name} siap untuk checkout.`);
@@ -147,7 +152,10 @@ export default function Home() {
               Hey, {state.user?.name?.split(' ')[0]} 👋
             </h1>
           </div>
-          <button onClick={() => navigate('/profile')} className="px-3 py-2 rounded-xl text-xs font-semibold"
+          <button onClick={() => {
+            if (!state.isAuthenticated) navigate('/login');
+            else navigate('/profile');
+          }} className="px-3 py-2 rounded-xl text-xs font-semibold"
             style={{ background: '#F0F4FF', color: '#1D4ED8', border: '1px solid #BFDBFE' }}>
             {state.user?.name || 'Profile'}
           </button>

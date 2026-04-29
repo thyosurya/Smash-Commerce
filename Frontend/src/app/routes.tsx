@@ -18,6 +18,8 @@ import UserAnalytics from './pages/admin/UserAnalytics';
 import ProductManagement from './pages/admin/ProductManagement';
 import AuditLog from './pages/admin/AuditLog';
 import CRMSettings from './pages/admin/CRMSettings';
+import StringingService from './pages/user/StringingService';
+import StringingServiceManagement from './pages/admin/StringingServiceManagement';
 
 export const router = createBrowserRouter([
   // Auth (no layout)
@@ -33,6 +35,7 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: 'product/:id', Component: ProductDetail },
       { path: 'cart', Component: Cart },
+      { path: 'stringing-service', Component: StringingService },
       { path: 'checkout', Component: Checkout },
       { path: 'order-success', Component: OrderSuccess },
       { path: 'profile', Component: Profile },
@@ -51,6 +54,7 @@ export const router = createBrowserRouter([
       { path: 'sales', element: <Navigate to="/admin/reports" replace /> },
       { path: 'users', Component: UserAnalytics },
       { path: 'products', Component: ProductManagement },
+      { path: 'stringing-service', Component: StringingServiceManagement },
       { path: 'audit', Component: AuditLog },
       { path: 'crm', Component: CRMSettings },
     ],

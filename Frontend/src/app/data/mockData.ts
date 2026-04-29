@@ -216,6 +216,47 @@ export const products: Product[] = [
     features: ['Mesh Ventilation', 'Moisture Management', 'Lightweight', 'Relaxed Fit'],
     specs: { Material: 'Polyester/Spandex', Fit: 'Regular Fit', Neck: 'V-Neck', Care: 'Hand Wash' },
   },
+  {
+    id: 'r005', name: 'Astrox 88D Pro', brand: 'Yonex', category: 'racket',
+    price: 2950000, rating: 4.8, reviewCount: 142, stock: 20,
+    image: IMG.racket, badge: 'Top Rated',
+    description: 'Designed for back-court power players, featuring a new frame design for steeper smashes.',
+    features: ['Rotational Generator System', 'Energy Boost Cap Plus', 'Namd Graphite', 'Aero+Box Frame'],
+    specs: { Weight: '83g', Balance: 'Head Heavy', Flex: 'Stiff', Frame: 'HM Graphite', Shaft: 'HM Graphite' },
+    stringable: true,
+  },
+  {
+    id: 's004', name: 'Comfort Z3 Men', brand: 'Yonex', category: 'shoes',
+    price: 1850000, rating: 4.7, reviewCount: 95, stock: 28,
+    image: IMG.shoes, isNew: true,
+    description: 'Premium comfort shoes with specialized inner bootie design for a snug fit.',
+    features: ['Power Cushion+', 'Inner Bootie', 'Radial Blade Sole', 'Feather Bounce Foam'],
+    specs: { Type: 'Comfort', Sole: 'Rubber', Upper: 'Synthetic Leather', Width: 'Standard' },
+  },
+  {
+    id: 'st003', name: 'Aerobite', brand: 'Yonex', category: 'string',
+    price: 155000, rating: 4.9, reviewCount: 310, stock: 250,
+    image: IMG.string, badge: 'Best Seller',
+    description: 'First ever hybrid string combo from Yonex. Control the game with heavy spin and solid touch.',
+    features: ['Hybrid String', 'Heavy Spin', 'Solid Touch', 'Polyurethane Coating'],
+    specs: { Gauge: '0.67mm (M) / 0.61mm (C)', Length: '10m', Type: 'Multifilament', Tension: '20-28 lbs' },
+  },
+  {
+    id: 'sc004', name: 'Master 1', brand: 'Victor', category: 'shuttlecock',
+    price: 245000, rating: 4.8, reviewCount: 156, stock: 120,
+    image: IMG.shuttlecock,
+    description: 'BWF approved tournament grade shuttlecock used in major international competitions.',
+    features: ['Goose Feather', 'Natural Cork', 'BWF Approved', 'High Durability'],
+    specs: { Type: 'Goose Feather', Speed: '77', Base: 'Natural Cork', Quantity: '12 pcs/tube' },
+  },
+  {
+    id: 'b003', name: 'Expert Tournament 6R', brand: 'Li-Ning', category: 'bag',
+    price: 650000, rating: 4.6, reviewCount: 82, stock: 35,
+    image: IMG.bag,
+    description: 'Compact 6-racket bag with dedicated shoe compartment and thermal lining.',
+    features: ['6 Racket Capacity', 'Shoe Compartment', 'Thermal Lining', 'Water Resistant'],
+    specs: { Capacity: '6 Rackets', Material: 'PU Leather', Dimensions: '76×24×32 cm', Weight: '0.9kg' },
+  },
 ];
 
 // ─── Reviews ───────────────────────────────────────────────────────────────────

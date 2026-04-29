@@ -1,11 +1,12 @@
 import { Outlet, useNavigate, useLocation } from 'react-router';
-import { Home, ShoppingCart, Package, User } from 'lucide-react';
+import { Home, ShoppingCart, Package, User, Wrench } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useEffect } from 'react';
 
 const NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/' },
   { icon: ShoppingCart, label: 'Cart', path: '/cart' },
+  { icon: Wrench, label: 'Stringing', path: '/stringing-service' },
   { icon: Package, label: 'Orders', path: '/orders' },
   { icon: User, label: 'Profile', path: '/profile' },
 ];
@@ -16,9 +17,13 @@ export function UserLayout() {
   const location = useLocation();
 
   useEffect(() => {
-    if (!state.isAuthenticated) navigate('/login', { replace: true });
-    else if (state.user?.isAdmin) navigate('/admin', { replace: true });
-  }, [state.isAuthenticated, state.user, navigate]);
+    const protectedPaths = ['/profile', '/orders', '/activity', '/checkout', '/stringing-service'];
+    if (!state.isAuthenticated && protectedPaths.includes(location.pathname)) {
+      navigate('/login', { replace: true });
+    } else if (state.user?.isAdmin) {
+      navigate('/admin', { replace: true });
+    }
+  }, [state.isAuthenticated, state.user, navigate, location.pathname]);
 
   return (
     <div className="min-h-screen" style={{ background: '#F0F4FF', fontFamily: "'Poppins', sans-serif" }}>
@@ -36,7 +41,14 @@ export function UserLayout() {
           return (
             <button
               key={path}
-              onClick={() => navigate(path)}
+              onClick={() => {
+                const protectedPaths = ['/profile', '/orders', '/stringing-service'];
+                if (!state.isAuthenticated && protectedPaths.includes(path)) {
+                  navigate('/login');
+                } else {
+                  navigate(path);
+                }
+              }}
               className="flex flex-col items-center gap-0.5 py-3 px-5 relative transition-all"
             >
               <div className="relative">

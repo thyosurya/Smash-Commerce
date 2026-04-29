@@ -116,7 +116,14 @@ export default function Cart() {
           </div>
 
           {/* Checkout Button */}
-          <button onClick={() => navigate('/checkout')}
+          <button onClick={() => {
+            if (!state.isAuthenticated) {
+              toast.error('Silakan login terlebih dahulu untuk checkout.');
+              navigate('/login');
+              return;
+            }
+            navigate('/checkout');
+          }}
             className="w-full py-3.5 rounded-2xl text-white font-semibold flex items-center justify-center gap-2"
             style={{ background: 'linear-gradient(135deg, #1D4ED8, #2563EB)', boxShadow: '0 4px 20px rgba(29,78,216,0.35)' }}>
             Proceed to Checkout <ChevronRight size={16} />

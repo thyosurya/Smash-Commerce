@@ -78,6 +78,11 @@ export default function ProductDetail() {
   const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
 
   const handleAddToCart = () => {
+    if (!state.isAuthenticated) {
+      toast.error('Silakan login terlebih dahulu.');
+      navigate('/login');
+      return;
+    }
     addToCart(product, qty, product.stringable ? { stringType, tension } : undefined);
     setAdded(true);
     toast.success(`${product.name} added to cart! 🛒`);
@@ -85,11 +90,21 @@ export default function ProductDetail() {
   };
 
   const handleLoveAddToCart = () => {
+    if (!state.isAuthenticated) {
+      toast.error('Silakan login terlebih dahulu.');
+      navigate('/login');
+      return;
+    }
     addToCart(product, 1, product.stringable ? { stringType, tension } : undefined);
     toast.success(`${product.name} disimpan ke cart.`);
   };
 
   const handleBuyNow = () => {
+    if (!state.isAuthenticated) {
+      toast.error('Silakan login terlebih dahulu.');
+      navigate('/login');
+      return;
+    }
     clearCart();
     addToCart(product, qty, product.stringable ? { stringType, tension } : undefined);
     toast.success('Lanjut ke checkout.');
@@ -157,7 +172,7 @@ export default function ProductDetail() {
           <h1 className="font-bold text-xl mt-1.5 leading-tight" style={{ color: '#0F172A' }}>{product.name}</h1>
           <div className="flex items-center gap-2 mt-1.5">
             <div className="flex items-center gap-1">
-              {[1,2,3,4,5].map(s => (
+              {[1, 2, 3, 4, 5].map(s => (
                 <Star key={s} size={13} fill={s <= Math.floor(product.rating) ? '#F59E0B' : 'none'} style={{ color: '#F59E0B' }} />
               ))}
             </div>
