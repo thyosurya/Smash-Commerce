@@ -73,7 +73,7 @@ export async function createOrderApi(payload: {
   items: Array<{
     productId: string;
     quantity: number;
-    customization?: { stringType?: string; tension?: number };
+    customization?: { stringType?: string; tension?: number; gripType?: string };
   }>;
   address: string;
   paymentMethod: string;

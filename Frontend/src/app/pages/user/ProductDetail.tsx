@@ -128,7 +128,7 @@ export default function ProductDetail() {
           <button onClick={handleLoveAddToCart}
             className="w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-sm"
             style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)' }}>
-            <Heart size={18} fill={isInCart ? '#EF4444' : 'none'} style={{ color: isInCart ? '#EF4444' : 'white' }} />
+            <ShoppingCart size={18} fill={isInCart ? '#EF4444' : 'none'} style={{ color: isInCart ? '#EF4444' : 'white' }} />
           </button>
         </div>
 

@@ -17,7 +17,7 @@ const CATEGORIES: { id: Category; label: string; icon: string; color: string }[]
 
 const BANNERS = [
   {
-    id: 1, title: 'Koleksi\nMusim Baru', subtitle: 'Diskon hingga 30% untuk semua raket', cta: 'Belanja Sekarang',
+    id: 1, title: 'Koleksi\nMusim Baru', subtitle: 'Diskon hingga 30% untuk semua raket', cta: 'Selamat Berbelanja',
     bg: 'linear-gradient(135deg, #0F1F3D 0%, #1D4ED8 60%, #0EA5E9 100%)',
     image: IMG.action, tag: 'WAKTU TERBATAS',
   },
@@ -213,23 +213,17 @@ export default function Home() {
                     <p className="text-sm mt-1 mb-3" style={{ color: 'rgba(255,255,255,0.8)' }}>{BANNERS[activeBanner].subtitle}</p>
                     <button className="flex items-center gap-1 text-sm font-semibold px-4 py-2 rounded-xl"
                       style={{ background: 'rgba(255,255,255,0.18)', color: 'white', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.25)' }}>
-                      {BANNERS[activeBanner].cta} <ChevronRight size={14} />
+                      {BANNERS[activeBanner].cta}
                     </button>
                   </div>
                 </div>
               </div>
               {/* Banner dots */}
-              <div className="flex justify-center gap-1.5 mt-2">
-                {BANNERS.map((_, i) => (
-                  <button key={i} onClick={() => setActiveBanner(i)}
-                    className="rounded-full transition-all"
-                    style={{ width: i === activeBanner ? '16px' : '6px', height: '6px', background: i === activeBanner ? '#1D4ED8' : '#CBD5E1' }} />
-                ))}
-              </div>
+             
             </div>
 
             {/* Stats Strip */}
-            <div className="grid grid-cols-3 gap-2">
+            {/* <div className="grid grid-cols-3 gap-2">
               {[
                 { icon: Award, label: 'Top Brands', value: '25+', color: '#2563EB' },
                 { icon: Tag, label: 'Products', value: '500+', color: '#0EA5E9' },
@@ -241,7 +235,7 @@ export default function Home() {
                   <p className="text-[10px]" style={{ color: '#94A3B8' }}>{label}</p>
                 </div>
               ))}
-            </div>
+            </div> */}
 
             {/* Categories */}
             <div>

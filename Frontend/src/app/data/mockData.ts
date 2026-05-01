@@ -8,10 +8,11 @@ export const IMG = {
   jersey: "https://images.unsplash.com/photo-1768492263433-b81fdcdce0e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800",
   court: "https://images.unsplash.com/photo-1771909720886-a90afd1b37f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1200",
   string: "https://images.unsplash.com/photo-1773186315376-88aaf9878707?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800",
+  grip: "https://images.unsplash.com/photo-1620052737602-0e9eb86b72a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800",
 };
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
-export type Category = 'racket' | 'shoes' | 'shuttlecock' | 'string' | 'bag' | 'jersey';
+export type Category = 'racket' | 'shoes' | 'shuttlecock' | 'string' | 'bag' | 'jersey' | 'grip';
 
 export interface Product {
   id: string;
@@ -50,7 +51,7 @@ export interface Order {
     product: Product;
     quantity: number;
     price: number;
-    customization?: { stringType?: string; tension?: number };
+    customization?: { stringType?: string; tension?: number; gripType?: string };
   }[];
   subtotal: number;
   shipping: number;
@@ -64,7 +65,7 @@ export interface Order {
 export interface CartItem {
   product: Product;
   quantity: number;
-  customization?: { stringType?: string; tension?: number };
+  customization?: { stringType?: string; tension?: number; gripType?: string };
 }
 
 export interface ActivityEvent {
@@ -257,6 +258,31 @@ export const products: Product[] = [
     features: ['6 Racket Capacity', 'Shoe Compartment', 'Thermal Lining', 'Water Resistant'],
     specs: { Capacity: '6 Rackets', Material: 'PU Leather', Dimensions: '76×24×32 cm', Weight: '0.9kg' },
   },
+  {
+    id: 'g001', name: 'Super Grap AC102EX', brand: 'Yonex', category: 'grip',
+    price: 7000, rating: 4.9, reviewCount: 842, stock: 1000,
+    image: IMG.grip, badge: 'Best Seller',
+    description: 'The most popular overgrip in the world. Provides excellent tackiness and durability.',
+    features: ['Tacky Feel', 'High Absorbency', 'Durable', 'Polyurethane Material'],
+    specs: { Type: 'Overgrip', Thickness: '0.6mm', Width: '25mm', Quantity: '3 pcs/pack' },
+    isBestSeller: true,
+  },
+  {
+    id: 'g002', name: 'Towel Grip AC402EX', brand: 'Yonex', category: 'grip',
+    price: 8000, rating: 4.8, reviewCount: 325, stock: 500,
+    image: IMG.grip,
+    description: '100% cotton towel grip for maximum sweat absorption.',
+    features: ['100% Cotton', 'Maximum Absorbency', 'Comfortable Feel', 'Anti-Bacterial'],
+    specs: { Type: 'Towel Grip', Material: 'Cotton', Width: '30mm', Length: '740mm' },
+  },
+  {
+    id: 'g003', name: 'GR233 Overgrip', brand: 'Victor', category: 'grip',
+    price: 10000, rating: 4.6, reviewCount: 156, stock: 400,
+    image: IMG.grip, isNew: true,
+    description: 'High-quality overgrip with anti-slip performance and soft touch.',
+    features: ['Anti-Slip', 'Soft Touch', 'Good Elasticity'],
+    specs: { Type: 'Overgrip', Thickness: '0.6mm', Material: 'PU', Quantity: '3 pcs/pack' },
+  },
 ];
 
 // ─── Reviews ───────────────────────────────────────────────────────────────────
@@ -379,7 +405,7 @@ export const formatDate = (dateStr: string): string =>
 export const getProductsByCategory = (cat: Category) => products.filter(p => p.category === cat);
 
 export const getCategoryLabel = (cat: Category): string => ({
-  racket: 'Racket', shoes: 'Shoes', shuttlecock: 'Shuttlecock', string: 'String', bag: 'Bag', jersey: 'Jersey',
+  racket: 'Racket', shoes: 'Shoes', shuttlecock: 'Shuttlecock', string: 'String', bag: 'Bag', jersey: 'Jersey', grip: 'Grip'
 }[cat]);
 
 export const getUserTier = (points: number) =>

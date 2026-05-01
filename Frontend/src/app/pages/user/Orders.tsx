@@ -234,6 +234,7 @@ export default function Orders() {
                                   <p style={{ color: '#94A3B8' }}>
                                     {item.customization.stringType ? `String: ${item.customization.stringType}` : ''}
                                     {item.customization.tension ? ` | ${item.customization.tension} lbs` : ''}
+                                    {item.customization.gripType ? `Grip: ${item.customization.gripType}` : ''}
                                   </p>
                                 )}
                               </div>

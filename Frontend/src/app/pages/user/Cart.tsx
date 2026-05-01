@@ -8,9 +8,8 @@ export default function Cart() {
   const navigate = useNavigate();
   const { state, updateQuantity, removeFromCart, cartTotal } = useApp();
   const cart = state.cart;
-  const shipping = cart.length > 0 ? 25000 : 0;
   const discount = cartTotal > 2000000 ? Math.round(cartTotal * 0.05) : 0;
-  const finalTotal = cartTotal + shipping - discount;
+  const finalTotal = cartTotal - discount;
 
   return (
     <div className="min-h-screen" style={{ background: '#F0F4FF', fontFamily: "'Poppins', sans-serif" }}>
@@ -29,7 +28,7 @@ export default function Cart() {
         </div>
       </div>
 
-      {cart.length === 0 ? (
+      {cart.length === 0 ? (  
         <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
           <div className="w-24 h-24 rounded-full flex items-center justify-center mb-4" style={{ background: '#F1F5F9' }}>
             <ShoppingBag size={40} style={{ color: '#CBD5E1' }} />
@@ -56,6 +55,7 @@ export default function Cart() {
                     <p className="text-[10px] mt-0.5" style={{ color: '#94A3B8' }}>
                       {item.customization.stringType && `String: ${item.customization.stringType.split(' ').slice(1).join(' ')}`}
                       {item.customization.tension && ` · ${item.customization.tension} lbs`}
+                      {item.customization.gripType && `Grip: ${item.customization.gripType.split(' ').slice(1).join(' ')}`}
                     </p>
                   )}
                   <div className="flex items-center justify-between mt-2">
@@ -86,11 +86,11 @@ export default function Cart() {
           </div>
 
           {/* Promo Code */}
-          <div className="rounded-2xl p-4 mb-4 flex items-center gap-3 bg-white" style={{ border: '1px dashed #CBD5E1' }}>
-            <Tag size={16} style={{ color: '#1D4ED8' }} />
-            <input placeholder="Enter promo code" className="flex-1 bg-transparent text-sm outline-none" style={{ color: '#0F172A' }} />
-            <button className="text-xs font-semibold px-3 py-1.5 rounded-lg text-white" style={{ background: '#1D4ED8' }}>Apply</button>
-          </div>
+          {/* <div className="rounded-2xl p-4 mb-4 flex items-center gap-3 bg-white" style={{ border: '1px dashed #CBD5E1' }}> */}
+            {/* <Tag size={16} style={{ color: '#1D4ED8' }} /> */}
+            {/* <input placeholder="Enter promo code" className="flex-1 bg-transparent text-sm outline-none" style={{ color: '#0F172A' }} /> */}
+            {/* <button className="text-xs font-semibold px-3 py-1.5 rounded-lg text-white" style={{ background: '#1D4ED8' }}>Apply</button> */}
+          {/* </div> */}
 
           {/* Order Summary */}
           <div className="rounded-2xl p-4 mb-4 space-y-2.5 bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
@@ -101,7 +101,7 @@ export default function Cart() {
             </div>
             <div className="flex justify-between text-sm">
               <span style={{ color: '#94A3B8' }}>Ongkos Kirim</span>
-              <span style={{ color: '#0F172A' }}>{formatCurrency(shipping)}</span>
+              <span className="text-xs italic" style={{ color: '#94A3B8' }}>Dihitung saat checkout</span>
             </div>
             {discount > 0 && (
               <div className="flex justify-between text-sm">
