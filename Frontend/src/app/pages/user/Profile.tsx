@@ -4,6 +4,7 @@ import { Package, Activity, Star, Settings, LogOut, ChevronRight, Award, Zap, Sh
 import { useApp } from '../../context/AppContext';
 import { fetchUserCrmSettings, type CrmTier } from '../../services/crmApi';
 import { fetchMyOrders } from '../../services/orderApi';
+import { fetchMyReviews } from '../../services/reviewApi';
 import { updateProfileApi } from '../../services/authApi';
 import { getAuthToken } from '../../services/authApi';
 import { toast } from 'sonner';
@@ -14,6 +15,7 @@ export default function Profile() {
   const user = state.user!;
   const [tiers, setTiers] = useState<CrmTier[]>([]);
   const [orderCount, setOrderCount] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
   const [editPhone, setEditPhone] = useState(false);
   const [phoneInput, setPhoneInput] = useState(user.phone ?? '');
   const [savingPhone, setSavingPhone] = useState(false);
@@ -23,15 +25,17 @@ export default function Profile() {
 
     const loadProfileData = async () => {
       try {
-        const [crm, orders] = await Promise.all([fetchUserCrmSettings(), fetchMyOrders()]);
+        const [crm, orders, reviews] = await Promise.all([fetchUserCrmSettings(), fetchMyOrders(), fetchMyReviews()]);
         if (isMounted) {
           setTiers(crm.tiers ?? []);
           setOrderCount(orders.length);
+          setReviewCount(reviews.length);
         }
       } catch {
         if (isMounted) {
           setTiers([]);
           setOrderCount(0);
+          setReviewCount(0);
         }
       }
     };
@@ -195,7 +199,7 @@ export default function Profile() {
         <div className="grid grid-cols-3 gap-2">
           {[
             { label: 'Pesanan', value: orderCount.toLocaleString('id-ID'), icon: Package, color: '#0EA5E9' },
-            { label: 'Ulasan', value: '0', icon: Star, color: '#F59E0B' },
+            { label: 'Ulasan', value: reviewCount.toLocaleString('id-ID'), icon: Star, color: '#F59E0B' },
             { label: 'Poin', value: user.points.toLocaleString(), icon: Award, color: '#8B5CF6' },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="rounded-2xl p-3 text-center bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>

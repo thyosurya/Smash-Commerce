@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\CrmController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -25,6 +26,9 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::post('/orders', [OrderController::class, 'store']);
 	Route::post('/points/earn', [PointController::class, 'earn']);
 	Route::get('/points/history', [PointController::class, 'history']);
+	// Reviews
+	Route::get('/reviews/my', [ReviewController::class, 'index']);
+	Route::post('/reviews', [ReviewController::class, 'store']);
 });
 
 Route::get('/products', [ProductController::class, 'index']);
