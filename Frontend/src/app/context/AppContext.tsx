@@ -32,6 +32,7 @@ interface PlaceOrderInput {
 type AppAction =
   | { type: 'LOGIN'; payload: User }
   | { type: 'LOGOUT' }
+  | { type: 'SET_USER'; payload: Partial<User> }
   | { type: 'UPDATE_USER_POINTS'; payload: number }
   | { type: 'PLACE_ORDER'; payload: Order }
   | { type: 'ADD_TO_CART'; payload: { product: Product; quantity: number; customization?: CartItem['customization'] } }
@@ -61,7 +62,7 @@ function mapApiUserToAppUser(user: ApiUser): User {
     name: user.name,
     email: user.email,
     avatar: `https://i.pravatar.cc/120?u=${encodeURIComponent(user.email)}`,
-    phone: '',
+    phone: user.phone ?? '',
     points: user.points ?? 0,
     isAdmin: user.role === 'admin',
     joinDate: user.joinedAt ?? new Date().toISOString().slice(0, 10),
@@ -75,6 +76,9 @@ function reducer(state: AppState, action: AppAction): AppState {
       return { ...state, user: action.payload, isAuthenticated: true };
     case 'LOGOUT':
       return { ...state, user: null, isAuthenticated: false, cart: [] };
+    case 'SET_USER':
+      if (!state.user) return state;
+      return { ...state, user: { ...state.user, ...action.payload } };
     case 'UPDATE_USER_POINTS':
       if (!state.user) {
         return state;

@@ -6,9 +6,9 @@ import { useApp } from '../../context/AppContext';
 
 function PasswordStrength({ password }: { password: string }) {
   const checks = [
-    { label: '8+ characters', ok: password.length >= 8 },
-    { label: 'Uppercase letter', ok: /[A-Z]/.test(password) },
-    { label: 'Number', ok: /[0-9]/.test(password) },
+    { label: '8+ karakter', ok: password.length >= 8 },
+    { label: 'Huruf kapital', ok: /[A-Z]/.test(password) },
+    { label: 'Angka', ok: /[0-9]/.test(password) },
   ];
   const strength = checks.filter(c => c.ok).length;
   const colors = ['#EF4444', '#F59E0B', '#3B82F6', '#10B981'];
@@ -43,8 +43,8 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.password !== form.confirm) { toast.error("Passwords don't match"); return; }
-    if (!agree) { toast.error('Please accept terms'); return; }
+    if (form.password !== form.confirm) { toast.error("Password tidak cocok"); return; }
+    if (!agree) { toast.error('Harap setujui syarat & ketentuan'); return; }
     setLoading(true);
     const user = await register(form.name, form.email, form.password, form.confirm);
     setLoading(false);
@@ -54,7 +54,7 @@ export default function Register() {
       return;
     }
 
-    toast.success('Account created!');
+    toast.success('Akun berhasil dibuat!');
     navigate('/', { replace: true });
   };
 
@@ -71,8 +71,8 @@ export default function Register() {
             style={{ background: 'linear-gradient(135deg, #1D4ED8, #22D3EE)', boxShadow: '0 0 30px rgba(34,211,238,0.3)' }}>
             <Zap size={26} className="text-white" />
           </div>
-          <h1 className="text-white text-xl font-bold">Create Account</h1>
-          <p className="text-sm mt-1" style={{ color: '#64748B' }}>Join the Smash community</p>
+          <h1 className="text-white text-xl font-bold">Buat Akun</h1>
+          <p className="text-sm mt-1" style={{ color: '#64748B' }}>Bergabung dengan komunitas Smash</p>
         </div>
 
         {/* Card */}
@@ -80,10 +80,10 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="space-y-3.5">
             {/* Full name */}
             <div>
-              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Full Name</label>
+              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Nama Lengkap</label>
               <div className="relative">
                 <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748B' }} />
-                <input type="text" value={form.name} onChange={set('name')} required placeholder="Your full name"
+                <input type="text" value={form.name} onChange={set('name')} required placeholder="Nama lengkap kamu"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none"
                   style={{ background: '#162040', border: '1px solid #1E3A6E', color: '#F1F5F9' }}
                   onFocus={e => e.currentTarget.style.borderColor = '#22D3EE'}
@@ -93,7 +93,7 @@ export default function Register() {
 
             {/* Email */}
             <div>
-              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Email Address</label>
+              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Alamat Email</label>
               <div className="relative">
                 <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748B' }} />
                 <input type="email" value={form.email} onChange={set('email')} required placeholder="you@example.com"
@@ -106,7 +106,7 @@ export default function Register() {
 
             {/* Phone */}
             <div>
-              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Phone Number</label>
+              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Nomor Telepon</label>
               <div className="relative">
                 <Phone size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748B' }} />
                 <input type="tel" value={form.phone} onChange={set('phone')} required placeholder="+62 812 3456 7890"
@@ -122,7 +122,7 @@ export default function Register() {
               <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Password</label>
               <div className="relative">
                 <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748B' }} />
-                <input type={showPw ? 'text' : 'password'} value={form.password} onChange={set('password')} required placeholder="Min. 8 characters"
+                <input type={showPw ? 'text' : 'password'} value={form.password} onChange={set('password')} required placeholder="Min. 8 karakter"
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl text-sm outline-none"
                   style={{ background: '#162040', border: '1px solid #1E3A6E', color: '#F1F5F9' }}
                   onFocus={e => e.currentTarget.style.borderColor = '#22D3EE'}
@@ -136,10 +136,10 @@ export default function Register() {
 
             {/* Confirm */}
             <div>
-              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Confirm Password</label>
+              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Konfirmasi Password</label>
               <div className="relative">
                 <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748B' }} />
-                <input type="password" value={form.confirm} onChange={set('confirm')} required placeholder="Re-enter password"
+                <input type="password" value={form.confirm} onChange={set('confirm')} required placeholder="Ulangi password"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none"
                   style={{ background: '#162040', border: '1px solid #1E3A6E', color: '#F1F5F9',
                     borderColor: form.confirm && form.confirm !== form.password ? '#EF4444' : form.confirm && form.confirm === form.password ? '#10B981' : '#1E3A6E' }}
@@ -158,14 +158,14 @@ export default function Register() {
                 {agree && <Check size={10} className="text-white" />}
               </div>
               <span className="text-xs" style={{ color: '#64748B' }}>
-                I agree to the <span style={{ color: '#22D3EE' }}>Terms of Service</span> and <span style={{ color: '#22D3EE' }}>Privacy Policy</span>
+                Saya setuju dengan <span style={{ color: '#22D3EE' }}>Syarat & Ketentuan</span> dan <span style={{ color: '#22D3EE' }}>Kebijakan Privasi</span>
               </span>
             </label>
 
             <button type="submit" disabled={loading}
               className="w-full py-3 rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2 transition-all"
               style={{ background: loading ? '#1E3A6E' : 'linear-gradient(135deg, #1D4ED8, #2563EB)', boxShadow: loading ? 'none' : '0 4px 20px rgba(37,99,235,0.4)' }}>
-              {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><span>Create Account</span><ChevronRight size={16} /></>}
+              {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><span>Buat Akun</span><ChevronRight size={16} /></>}
             </button>
           </form>
 
@@ -181,8 +181,8 @@ export default function Register() {
         </div>
 
         <p className="text-sm mt-5" style={{ color: '#64748B' }}>
-          Already have an account?{' '}
-          <Link to="/login" style={{ color: '#22D3EE' }} className="font-medium">Sign In</Link>
+          Sudah punya akun?{' '}
+          <Link to="/login" style={{ color: '#22D3EE' }} className="font-medium">Masuk</Link>
         </p>
       </div>
     </div>

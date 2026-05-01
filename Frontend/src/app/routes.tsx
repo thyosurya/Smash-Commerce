@@ -20,6 +20,7 @@ import AuditLog from './pages/admin/AuditLog';
 import CRMSettings from './pages/admin/CRMSettings';
 import StringingService from './pages/user/StringingService';
 import StringingServiceManagement from './pages/admin/StringingServiceManagement';
+import OrderManagement from './pages/admin/OrderManagement';
 
 export const router = createBrowserRouter([
   // Auth (no layout)
@@ -54,6 +55,7 @@ export const router = createBrowserRouter([
       { path: 'sales', element: <Navigate to="/admin/reports" replace /> },
       { path: 'users', Component: UserAnalytics },
       { path: 'products', Component: ProductManagement },
+      { path: 'orders', Component: OrderManagement },
       { path: 'stringing-service', Component: StringingServiceManagement },
       { path: 'audit', Component: AuditLog },
       { path: 'crm', Component: CRMSettings },

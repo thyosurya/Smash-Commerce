@@ -14,16 +14,18 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone'    => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'confirmed', Password::min(6)],
         ]);
 
         $user = User::query()->create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
+            'phone'    => $validated['phone'] ?? null,
             'password' => $validated['password'],
-            'role' => 'user',
+            'role'     => 'user',
         ]);
 
         $token = $user->createToken('auth-token', ['user'])->plainTextToken;
@@ -67,6 +69,26 @@ class AuthController extends Controller
         ]);
     }
 
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name'  => ['sometimes', 'string', 'max:255'],
+            'phone' => ['sometimes', 'nullable', 'string', 'max:20'],
+        ]);
+
+        if (isset($validated['name']))  $user->name  = $validated['name'];
+        if (array_key_exists('phone', $validated)) $user->phone = $validated['phone'];
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profil berhasil diperbarui.',
+            'data'    => $this->formatUser($user),
+        ]);
+    }
+
     public function logout(Request $request): JsonResponse
     {
         $request->user()?->currentAccessToken()?->delete();
@@ -79,11 +101,12 @@ class AuthController extends Controller
     private function formatUser(User $user): array
     {
         return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'role' => $user->role,
-            'points' => (int) $user->points,
+            'id'       => $user->id,
+            'name'     => $user->name,
+            'email'    => $user->email,
+            'phone'    => $user->phone,
+            'role'     => $user->role,
+            'points'   => (int) $user->points,
             'joinedAt' => $user->created_at?->toDateString(),
         ];
     }

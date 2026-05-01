@@ -1,17 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Package, Activity, Star, Settings, LogOut, ChevronRight, Award, Zap, Shield, Phone, Mail } from 'lucide-react';
+import { Package, Activity, Star, Settings, LogOut, ChevronRight, Award, Zap, Shield, Phone, Mail, Save, Edit2, Loader2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { fetchUserCrmSettings, type CrmTier } from '../../services/crmApi';
 import { fetchMyOrders } from '../../services/orderApi';
+import { updateProfileApi } from '../../services/authApi';
+import { getAuthToken } from '../../services/authApi';
 import { toast } from 'sonner';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { state, logout } = useApp();
+  const { state, logout, dispatch } = useApp();
   const user = state.user!;
   const [tiers, setTiers] = useState<CrmTier[]>([]);
   const [orderCount, setOrderCount] = useState(0);
+  const [editPhone, setEditPhone] = useState(false);
+  const [phoneInput, setPhoneInput] = useState(user.phone ?? '');
+  const [savingPhone, setSavingPhone] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,13 +75,29 @@ export default function Profile() {
 
   const handleLogout = () => {
     logout();
-    toast.success('Logged out successfully');
+    toast.success('Berhasil keluar');
     navigate('/login');
   };
 
+  const handleSavePhone = async () => {
+    setSavingPhone(true);
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error('Token tidak ditemukan.');
+      const updated = await updateProfileApi(token, { phone: phoneInput || null });
+      dispatch({ type: 'SET_USER', payload: { phone: updated.phone ?? '' } });
+      toast.success('Nomor HP berhasil disimpan 📱');
+      setEditPhone(false);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Gagal menyimpan nomor HP.');
+    } finally {
+      setSavingPhone(false);
+    }
+  };
+
   const MENU_ITEMS = [
-    { icon: Package, label: 'My Orders', desc: 'Track your purchases', path: '/orders', color: '#0EA5E9' },
-    { icon: Activity, label: 'Activity Log', desc: 'Browse & cart history', path: '/activity', color: '#8B5CF6' },
+    { icon: Package, label: 'Pesanan Saya', desc: 'Lacak pembelian kamu', path: '/orders', color: '#0EA5E9' },
+    { icon: Activity, label: 'Log Aktivitas', desc: 'Riwayat browse & keranjang', path: '/activity', color: '#8B5CF6' },
     // { icon: Star, label: 'My Reviews', desc: 'Rate products you bought', path: '/orders', color: '#F59E0B' },
     // { icon: Settings, label: 'Settings', desc: 'Account preferences', path: '/profile', color: '#94A3B8' },
   ];
@@ -114,7 +135,7 @@ export default function Profile() {
                 style={{ background: `${tier.color}30`, color: 'white', border: `1px solid ${tier.color}50` }}>
                 {tier.icon} {tier.name}
               </span>
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>Member since {new Date(user.joinDate).getFullYear()}</span>
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>Member sejak {new Date(user.joinDate).getFullYear()}</span>
             </div>
           </div>
         </div>
@@ -125,13 +146,13 @@ export default function Profile() {
         <div className="rounded-2xl p-4 bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
           <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-xs" style={{ color: '#94A3B8' }}>Current Tier</p>
+              <p className="text-xs" style={{ color: '#94A3B8' }}>Tier Saat Ini</p>
               <h3 className="font-bold text-lg flex items-center gap-1.5" style={{ color: '#0F172A' }}>
                 {tier.icon} {tier.name}
               </h3>
             </div>
             <div className="text-right">
-              <p className="text-xs" style={{ color: '#94A3B8' }}>Total Points</p>
+              <p className="text-xs" style={{ color: '#94A3B8' }}>Total Poin</p>
               <p className="text-xl font-bold" style={{ color: '#F59E0B' }}>{user.points.toLocaleString()}</p>
             </div>
           </div>
@@ -140,20 +161,20 @@ export default function Profile() {
             <>
               <div className="flex justify-between text-xs mb-1.5">
                 <span style={{ color: '#94A3B8' }}>{user.points.toLocaleString()} pts</span>
-                <span style={{ color: '#94A3B8' }}>{nextTier.minPoints.toLocaleString()} pts for {nextTier.icon} {nextTier.name}</span>
+                <span style={{ color: '#94A3B8' }}>{nextTier.minPoints.toLocaleString()} pts untuk {nextTier.icon} {nextTier.name}</span>
               </div>
               <div className="h-2 rounded-full overflow-hidden" style={{ background: '#F1F5F9' }}>
                 <div className="h-full rounded-full transition-all duration-700"
                   style={{ width: `${progress}%`, background: `linear-gradient(90deg, ${tier.color}, ${nextTier.color})` }} />
               </div>
               <p className="text-xs mt-1.5" style={{ color: '#94A3B8' }}>
-                {(nextTier.minPoints - user.points).toLocaleString()} pts to reach {nextTier.name}
+                {(nextTier.minPoints - user.points).toLocaleString()} pts lagi untuk mencapai {nextTier.name}
               </p>
             </>
           )}
           {!nextTier && (
             <div className="mt-2 p-2 rounded-xl text-center" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
-              <p className="text-xs font-semibold" style={{ color: '#F59E0B' }}>🏆 You've reached the highest tier!</p>
+              <p className="text-xs font-semibold" style={{ color: '#F59E0B' }}>🏆 Kamu sudah mencapai tier tertinggi!</p>
             </div>
           )}
 
@@ -173,9 +194,9 @@ export default function Profile() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2">
           {[
-            { label: 'Orders', value: orderCount.toLocaleString('id-ID'), icon: Package, color: '#0EA5E9' },
-            { label: 'Reviews', value: '0', icon: Star, color: '#F59E0B' },
-            { label: 'Points', value: user.points.toLocaleString(), icon: Award, color: '#8B5CF6' },
+            { label: 'Pesanan', value: orderCount.toLocaleString('id-ID'), icon: Package, color: '#0EA5E9' },
+            { label: 'Ulasan', value: '0', icon: Star, color: '#F59E0B' },
+            { label: 'Poin', value: user.points.toLocaleString(), icon: Award, color: '#8B5CF6' },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="rounded-2xl p-3 text-center bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
               <Icon size={16} style={{ color }} className="mx-auto mb-1" />
@@ -187,17 +208,52 @@ export default function Profile() {
 
         {/* Contact Info */}
         <div className="rounded-2xl p-4 space-y-3 bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-          <h3 className="font-semibold text-sm" style={{ color: '#0F172A' }}>Account Info</h3>
-          {[
-            { icon: Mail, label: user.email, color: '#1D4ED8' },
-            { icon: Phone, label: user.phone, color: '#10B981' },
-            { icon: Shield, label: 'Account verified', color: '#10B981' },
-          ].map(({ icon: Icon, label, color }) => (
-            <div key={label} className="flex items-center gap-2.5">
-              <Icon size={14} style={{ color }} />
-              <span className="text-sm" style={{ color: '#475569' }}>{label}</span>
-            </div>
-          ))}
+          <h3 className="font-semibold text-sm" style={{ color: '#0F172A' }}>Info Akun</h3>
+          {/* Email */}
+          <div className="flex items-center gap-2.5">
+            <Mail size={14} style={{ color: '#1D4ED8' }} />
+            <span className="text-sm" style={{ color: '#475569' }}>{user.email}</span>
+          </div>
+          {/* Phone — editable */}
+          <div className="flex items-center gap-2.5">
+            <Phone size={14} style={{ color: '#10B981' }} />
+            {editPhone ? (
+              <div className="flex-1 flex items-center gap-2">
+                <input
+                  type="tel"
+                  value={phoneInput}
+                  onChange={e => setPhoneInput(e.target.value)}
+                  placeholder="08123456789"
+                  className="flex-1 text-sm px-2 py-1 rounded-lg outline-none"
+                  style={{ border: '1px solid #1D4ED8', color: '#0F172A', background: '#F8FAFF' }}
+                  autoFocus
+                />
+                <button onClick={handleSavePhone} disabled={savingPhone}
+                  className="p-1.5 rounded-lg flex items-center gap-1 text-xs font-semibold"
+                  style={{ background: '#1D4ED8', color: 'white' }}>
+                  {savingPhone ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                </button>
+                <button onClick={() => { setEditPhone(false); setPhoneInput(user.phone ?? ''); }}
+                  className="p-1.5 rounded-lg text-xs"
+                  style={{ background: '#F1F5F9', color: '#94A3B8' }}>✕</button>
+              </div>
+            ) : (
+              <>
+                <span className="text-sm flex-1" style={{ color: user.phone ? '#475569' : '#94A3B8' }}>
+                  {user.phone || 'Belum diisi — wajib untuk notif WA'}
+                </span>
+                <button onClick={() => setEditPhone(true)}
+                  className="p-1 rounded-lg" style={{ color: '#1D4ED8', background: '#EFF6FF' }}>
+                  <Edit2 size={12} />
+                </button>
+              </>
+            )}
+          </div>
+          {/* Verified */}
+          <div className="flex items-center gap-2.5">
+            <Shield size={14} style={{ color: '#10B981' }} />
+            <span className="text-sm" style={{ color: '#475569' }}>Akun terverifikasi</span>
+          </div>
         </div>
 
         {/* Menu */}
@@ -225,7 +281,7 @@ export default function Profile() {
         <button onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-medium transition-colors"
           style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>
-          <LogOut size={16} /> Sign Out
+          <LogOut size={16} /> Keluar
         </button>
       </div>
     </div>

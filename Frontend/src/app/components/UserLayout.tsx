@@ -4,11 +4,11 @@ import { useApp } from '../context/AppContext';
 import { useEffect } from 'react';
 
 const NAV_ITEMS = [
-  { icon: Home, label: 'Home', path: '/' },
-  { icon: ShoppingCart, label: 'Cart', path: '/cart' },
-  { icon: Wrench, label: 'Stringing', path: '/stringing-service' },
-  { icon: Package, label: 'Orders', path: '/orders' },
-  { icon: User, label: 'Profile', path: '/profile' },
+  { icon: Home, label: 'Beranda', path: '/' },
+  { icon: ShoppingCart, label: 'Keranjang', path: '/cart' },
+  { icon: Wrench, label: 'Pasang Senar', path: '/stringing-service' },
+  { icon: Package, label: 'Pesanan', path: '/orders' },
+  { icon: User, label: 'Profil', path: '/profile' },
 ];
 
 export function UserLayout() {

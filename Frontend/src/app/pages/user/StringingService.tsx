@@ -7,12 +7,12 @@ import { formatCurrency, products } from '../../data/mockData';
 const STRINGS = products.filter(p => p.category === 'string');
 
 const TENSION_OPTIONS = [
-  { value: 20, label: '20 lbs - Beginner (More Power, Less Control)' },
-  { value: 22, label: '22 lbs - Beginner to Intermediate' },
-  { value: 24, label: '24 lbs - Intermediate (Balanced Power & Control)' },
-  { value: 26, label: '26 lbs - Intermediate to Advanced' },
-  { value: 28, label: '28 lbs - Advanced (More Control, Less Power)' },
-  { value: 30, label: '30 lbs - Professional Level' },
+  { value: 20, label: '20 lbs - Pemula (Power Lebih, Kontrol Kurang)' },
+  { value: 22, label: '22 lbs - Pemula ke Menengah' },
+  { value: 24, label: '24 lbs - Menengah (Power & Kontrol Seimbang)' },
+  { value: 26, label: '26 lbs - Menengah ke Mahir' },
+  { value: 28, label: '28 lbs - Mahir (Kontrol Lebih, Power Kurang)' },
+  { value: 30, label: '30 lbs - Level Profesional' },
 ];
 
 const SERVICE_FEE = 30000; // Harga jasa pasang senar

@@ -60,7 +60,7 @@ export default function ProductDetail() {
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: '#F0F4FF' }}>
       <div className="text-center">
-        <p className="text-lg mb-3" style={{ color: '#0F172A' }}>Loading product...</p>
+        <p className="text-lg mb-3" style={{ color: '#0F172A' }}>Memuat produk...</p>
       </div>
     </div>
   );
@@ -68,8 +68,8 @@ export default function ProductDetail() {
   if (!product) return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: '#F0F4FF' }}>
       <div className="text-center">
-        <p className="text-lg mb-3" style={{ color: '#0F172A' }}>Product not found</p>
-        <button onClick={() => navigate('/')} className="text-sm px-4 py-2 rounded-xl text-white" style={{ background: '#1D4ED8' }}>Back to Home</button>
+        <p className="text-lg mb-3" style={{ color: '#0F172A' }}>Produk tidak ditemukan</p>
+        <button onClick={() => navigate('/')} className="text-sm px-4 py-2 rounded-xl text-white" style={{ background: '#1D4ED8' }}>Kembali ke Beranda</button>
       </div>
     </div>
   );
@@ -166,7 +166,7 @@ export default function ProductDetail() {
               {product.brand}
             </span>
             <span className="text-xs" style={{ color: product.stock > 10 ? '#10B981' : product.stock > 0 ? '#F59E0B' : '#EF4444' }}>
-              {product.stock > 10 ? '✓ In Stock' : product.stock > 0 ? `Only ${product.stock} left` : 'Out of Stock'}
+              {product.stock > 10 ? '✓ Stok Tersedia' : product.stock > 0 ? `Sisa ${product.stock}` : 'Habis'}
             </span>
           </div>
           <h1 className="font-bold text-xl mt-1.5 leading-tight" style={{ color: '#0F172A' }}>{product.name}</h1>
@@ -177,7 +177,7 @@ export default function ProductDetail() {
               ))}
             </div>
             <span className="text-sm font-medium" style={{ color: '#0F172A' }}>{product.rating}</span>
-            <span className="text-xs" style={{ color: '#94A3B8' }}>({product.reviewCount} reviews)</span>
+            <span className="text-xs" style={{ color: '#94A3B8' }}>({product.reviewCount} ulasan)</span>
           </div>
           <div className="flex items-baseline gap-2 mt-2">
             <p className="font-bold text-2xl" style={{ color: '#1D4ED8' }}>{formatCurrency(product.price)}</p>
@@ -192,12 +192,12 @@ export default function ProductDetail() {
           <div className="rounded-2xl p-4 space-y-4 bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
             <div className="flex items-center gap-2">
               <Zap size={14} style={{ color: '#1D4ED8' }} />
-              <h3 className="font-semibold text-sm" style={{ color: '#0F172A' }}>Stringing Options</h3>
+              <h3 className="font-semibold text-sm" style={{ color: '#0F172A' }}>Opsi Senar</h3>
             </div>
 
             {/* String Type */}
             <div>
-              <label className="text-xs font-medium mb-2 block" style={{ color: '#475569' }}>String Type</label>
+              <label className="text-xs font-medium mb-2 block" style={{ color: '#475569' }}>Jenis Senar</label>
               <div className="flex flex-wrap gap-2">
                 {STRING_TYPES.map(s => (
                   <button key={s} onClick={() => setStringType(s)}
@@ -216,14 +216,14 @@ export default function ProductDetail() {
             {/* Tension */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-medium" style={{ color: '#475569' }}>Tension</label>
+                <label className="text-xs font-medium" style={{ color: '#475569' }}>Tegangan (Tension)</label>
                 <span className="text-sm font-bold" style={{ color: '#1D4ED8' }}>{tension} lbs</span>
               </div>
               <input type="range" min={19} max={30} value={tension} onChange={e => setTension(Number(e.target.value))}
                 className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
                 style={{ background: `linear-gradient(to right, #1D4ED8 ${((tension - 19) / 11) * 100}%, #E2E8F0 ${((tension - 19) / 11) * 100}%)` }} />
               <div className="flex justify-between text-[10px] mt-1" style={{ color: '#94A3B8' }}>
-                <span>19 lbs (Soft)</span><span>24 lbs (Standard)</span><span>30 lbs (Pro)</span>
+                <span>19 lbs (Lembut)</span><span>24 lbs (Standar)</span><span>30 lbs (Pro)</span>
               </div>
             </div>
           </div>
@@ -231,7 +231,7 @@ export default function ProductDetail() {
 
         {/* Features */}
         <div className="rounded-2xl p-4 bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
-          <h3 className="font-semibold text-sm mb-3" style={{ color: '#0F172A' }}>Key Features</h3>
+          <h3 className="font-semibold text-sm mb-3" style={{ color: '#0F172A' }}>Fitur Utama</h3>
           <div className="space-y-2">
             {product.features.map(f => (
               <div key={f} className="flex items-center gap-2">
@@ -247,7 +247,7 @@ export default function ProductDetail() {
         {/* Description */}
         <div className="rounded-2xl overflow-hidden bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
           <button className="w-full flex items-center justify-between p-4" onClick={() => setShowDesc(!showDesc)}>
-            <h3 className="font-semibold text-sm" style={{ color: '#0F172A' }}>Description</h3>
+            <h3 className="font-semibold text-sm" style={{ color: '#0F172A' }}>Deskripsi</h3>
             {showDesc ? <ChevronUp size={16} style={{ color: '#94A3B8' }} /> : <ChevronDown size={16} style={{ color: '#94A3B8' }} />}
           </button>
           {showDesc && <p className="px-4 pb-4 text-xs leading-relaxed" style={{ color: '#475569' }}>{product.description}</p>}
@@ -256,7 +256,7 @@ export default function ProductDetail() {
         {/* Specs */}
         <div className="rounded-2xl overflow-hidden bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
           <button className="w-full flex items-center justify-between p-4" onClick={() => setShowSpecs(!showSpecs)}>
-            <h3 className="font-semibold text-sm" style={{ color: '#0F172A' }}>Specifications</h3>
+            <h3 className="font-semibold text-sm" style={{ color: '#0F172A' }}>Spesifikasi</h3>
             {showSpecs ? <ChevronUp size={16} style={{ color: '#94A3B8' }} /> : <ChevronDown size={16} style={{ color: '#94A3B8' }} />}
           </button>
           {showSpecs && (
@@ -274,9 +274,9 @@ export default function ProductDetail() {
         {/* Trust badges */}
         <div className="grid grid-cols-3 gap-2">
           {[
-            { icon: Shield, label: 'Official\nProduct', color: '#10B981' },
-            { icon: Truck, label: 'Fast\nDelivery', color: '#0EA5E9' },
-            { icon: Zap, label: 'Secure\nPayment', color: '#F59E0B' },
+            { icon: Shield, label: 'Produk\nResmi', color: '#10B981' },
+            { icon: Truck, label: 'Pengiriman\nCepat', color: '#0EA5E9' },
+            { icon: Zap, label: 'Pembayaran\nAman', color: '#F59E0B' },
           ].map(({ icon: Icon, label, color }) => (
             <div key={label} className="flex flex-col items-center gap-1 p-3 rounded-xl bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
               <Icon size={16} style={{ color }} />
@@ -287,7 +287,7 @@ export default function ProductDetail() {
 
         {/* Reviews */}
         <div>
-          <h3 className="font-semibold mb-3" style={{ color: '#0F172A' }}>Customer Reviews</h3>
+          <h3 className="font-semibold mb-3" style={{ color: '#0F172A' }}>Ulasan Pelanggan</h3>
           <div className="rounded-2xl p-4 bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
             <p className="text-xs" style={{ color: '#94A3B8' }}>
               Review detail belum tersedia dari API. Total review saat ini: {product.reviewCount.toLocaleString('id-ID')}.
@@ -317,14 +317,14 @@ export default function ProductDetail() {
           <button onClick={handleAddToCart} disabled={product.stock === 0}
             className="flex-1 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all"
             style={{ background: added ? '#10B981' : '#F0F4FF', border: `1px solid ${added ? '#10B981' : '#1D4ED8'}`, color: added ? 'white' : '#1D4ED8' }}>
-            {added ? <><Check size={16} /> Added!</> : <><ShoppingCart size={16} /> Add to Cart</>}
+            {added ? <><Check size={16} />Ditambahkan!</> : <><ShoppingCart size={16} />Tambah ke Keranjang</>}
           </button>
 
-          {/* Buy Now */}
+          {/* Beli Sekarang */}
           <button onClick={handleBuyNow} disabled={product.stock === 0}
             className="flex-1 py-3 rounded-xl font-semibold text-sm text-white transition-all"
             style={{ background: 'linear-gradient(135deg, #1D4ED8, #2563EB)', boxShadow: '0 4px 15px rgba(29,78,216,0.35)' }}>
-            Buy Now
+            Beli Sekarang
           </button>
         </div>
       </div>

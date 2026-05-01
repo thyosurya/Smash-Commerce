@@ -7,24 +7,24 @@ import { fetchProducts } from '../../services/productApi';
 import { toast } from 'sonner';
 
 const CATEGORIES: { id: Category; label: string; icon: string; color: string }[] = [
-  { id: 'racket', label: 'Racket', icon: '🏸', color: '#2563EB' },
-  { id: 'shoes', label: 'Shoes', icon: '👟', color: '#8B5CF6' },
-  { id: 'shuttlecock', label: 'Shuttle', icon: '🪶', color: '#0EA5E9' },
-  { id: 'string', label: 'String', icon: '🎯', color: '#10B981' },
-  { id: 'bag', label: 'Bag', icon: '🎒', color: '#F59E0B' },
+  { id: 'racket', label: 'Raket', icon: '🏸', color: '#2563EB' },
+  { id: 'shoes', label: 'Sepatu', icon: '👟', color: '#8B5CF6' },
+  { id: 'shuttlecock', label: 'Kok', icon: '🪶', color: '#0EA5E9' },
+  { id: 'string', label: 'Senar', icon: '🎯', color: '#10B981' },
+  { id: 'bag', label: 'Tas', icon: '🎒', color: '#F59E0B' },
   { id: 'jersey', label: 'Jersey', icon: '👕', color: '#EF4444' },
 ];
 
 const BANNERS = [
   {
-    id: 1, title: 'New Season\nCollection', subtitle: 'Up to 30% OFF on all rackets', cta: 'Shop Now',
+    id: 1, title: 'Koleksi\nMusim Baru', subtitle: 'Diskon hingga 30% untuk semua raket', cta: 'Belanja Sekarang',
     bg: 'linear-gradient(135deg, #0F1F3D 0%, #1D4ED8 60%, #0EA5E9 100%)',
-    image: IMG.action, tag: 'LIMITED TIME',
+    image: IMG.action, tag: 'WAKTU TERBATAS',
   },
   {
-    id: 2, title: 'Pro Player\nBundle', subtitle: 'Racket + Shoes + Bag combo deal', cta: 'Get Bundle',
+    id: 2, title: 'Paket\nPro Player', subtitle: 'Promo combo Raket + Sepatu + Tas', cta: 'Dapatkan Paket',
     bg: 'linear-gradient(135deg, #0F1F3D 0%, #6D28D9 60%, #8B5CF6 100%)',
-    image: IMG.court, tag: 'BUNDLE DEAL',
+    image: IMG.court, tag: 'PAKET HEMAT',
   },
 ];
 
@@ -166,7 +166,7 @@ export default function Home() {
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#94A3B8' }} />
           <input
             value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search rackets, shoes, shuttles..."
+            placeholder="Cari raket, sepatu, kok..."
             className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none"
             style={{ background: '#F1F5F9', border: '1px solid #E2E8F0', color: '#0F172A' }} />
         </div>
@@ -176,7 +176,7 @@ export default function Home() {
         {/* Search results */}
         {searched && (
           <div>
-            <p className="text-sm mb-3" style={{ color: '#94A3B8' }}>{searched.length} results for "{searchQuery}"</p>
+            <p className="text-sm mb-3" style={{ color: '#94A3B8' }}>{searched.length} hasil untuk "{searchQuery}"</p>
             <div className="grid grid-cols-2 gap-3">
               {searched.map(p => (
                 <div key={p.id} onClick={() => navigate(`/product/${p.id}`)}
@@ -190,7 +190,7 @@ export default function Home() {
                 </div>
               ))}
               {searched.length === 0 && (
-                <div className="col-span-2 text-center py-10" style={{ color: '#94A3B8' }}>No products found</div>
+                <div className="col-span-2 text-center py-10" style={{ color: '#94A3B8' }}>Produk tidak ditemukan</div>
               )}
             </div>
           </div>
@@ -246,8 +246,8 @@ export default function Home() {
             {/* Categories */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="font-semibold" style={{ color: '#0F172A' }}>Categories</h2>
-                {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button> */}
+                <h2 className="font-semibold" style={{ color: '#0F172A' }}>Kategori</h2>
+                {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>Lihat Semua</button> */}
               </div>
               <div className="grid grid-cols-3 gap-2.5">
                 {CATEGORIES.map(cat => (
@@ -269,7 +269,7 @@ export default function Home() {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="font-semibold" style={{ color: '#0F172A' }}>{CATEGORIES.find(c => c.id === activeCategory)?.label}</h2>
-                  <button onClick={() => setActiveCategory('all')} className="text-xs font-medium" style={{ color: '#1D4ED8' }}>Clear</button>
+                  <button onClick={() => setActiveCategory('all')} className="text-xs font-medium" style={{ color: '#1D4ED8' }}>Hapus Filter</button>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {filtered.map(p => (
@@ -297,8 +297,8 @@ export default function Home() {
               <>
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-semibold" style={{ color: '#0F172A' }}>🔥 Best Sellers</h2>
-                    {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button> */}
+                    <h2 className="font-semibold" style={{ color: '#0F172A' }}>🔥 Terlaris</h2>
+                    {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>Lihat Semua</button> */}
                   </div>
                   <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4" style={{ scrollbarWidth: 'none' }}>
                     {featured.map(p => (
@@ -315,8 +315,8 @@ export default function Home() {
                 {/* New Arrivals */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-semibold" style={{ color: '#0F172A' }}>✨ New Arrivals</h2>
-                    {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>See All</button> */}
+                    <h2 className="font-semibold" style={{ color: '#0F172A' }}>✨ Produk Baru</h2>
+                    {/* <button className="text-xs font-medium" style={{ color: '#1D4ED8' }}>Lihat Semua</button> */}
                   </div>
                   <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4" style={{ scrollbarWidth: 'none' }}>
                     {newArrivals.map(p => (
@@ -349,7 +349,7 @@ export default function Home() {
                 {/* Recommended */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-semibold" style={{ color: '#0F172A' }}>💡 Recommended for You</h2>
+                    <h2 className="font-semibold" style={{ color: '#0F172A' }}>💡 Rekomendasi untuk Kamu</h2>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     {products.slice(0, 6).map(p => (

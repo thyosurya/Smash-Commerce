@@ -25,6 +25,8 @@ class Order extends Model
         'total',
         'address',
         'payment_method',
+        'shipping_method',
+        'admin_note',
         'tracking_number',
     ];
 

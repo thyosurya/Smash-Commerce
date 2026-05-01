@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOrderWhatsApp;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -33,11 +34,19 @@ class OrderController extends Controller
             'items.*.customization' => ['nullable', 'array'],
             'address' => ['required', 'string', 'max:500'],
             'paymentMethod' => ['required', 'string', 'max:80'],
+            'shippingMethod' => ['sometimes', 'string', 'in:delivery,pickup'],
+            'phone' => ['sometimes', 'nullable', 'string', 'max:20'],
             'shipping' => ['required', 'integer', 'min:0'],
             'discount' => ['required', 'integer', 'min:0'],
         ]);
 
         $user = $request->user();
+
+        // Auto-simpan nomor HP ke profil user jika belum ada
+        if (!empty($validated['phone']) && empty($user->phone)) {
+            $user->phone = $validated['phone'];
+            $user->save();
+        }
         $itemsInput = collect($validated['items']);
 
         $productIds = $itemsInput->pluck('productId')->unique()->values()->all();
@@ -80,16 +89,17 @@ class OrderController extends Controller
 
         $order = DB::transaction(function () use ($user, $preparedItems, $validated, $subtotal, $shipping, $discount, $total) {
             $order = Order::query()->create([
-                'id' => $this->generateOrderId(),
-                'user_id' => $user->id,
-                'status' => 'processing',
-                'subtotal' => $subtotal,
-                'shipping' => $shipping,
-                'discount' => $discount,
-                'total' => $total,
-                'address' => $validated['address'],
+                'id'             => $this->generateOrderId(),
+                'user_id'        => $user->id,
+                'status'         => 'pending',
+                'subtotal'       => $subtotal,
+                'shipping'       => $shipping,
+                'discount'       => $discount,
+                'total'          => $total,
+                'address'        => $validated['address'],
                 'payment_method' => $validated['paymentMethod'],
-                'tracking_number' => 'SMASH'.random_int(1000000, 9999999),
+                'shipping_method'=> $validated['shippingMethod'] ?? 'delivery',
+                'tracking_number'=> 'SMASH'.random_int(1000000, 9999999),
             ]);
 
             foreach ($preparedItems as $item) {
@@ -103,6 +113,17 @@ class OrderController extends Controller
             return $order->load('items');
         });
 
+        // ── Kirim notifikasi WA order baru (async via queue) ──────────
+        $phone = $user->phone ?? '';
+        if (!empty(trim($phone))) {
+            SendOrderWhatsApp::dispatch(
+                $order->id,
+                'pending',
+                $phone,
+                $user->name,
+            );
+        }
+
         return response()->json([
             'message' => 'Order berhasil dibuat.',
             'data' => $this->formatOrder($order),
@@ -112,34 +133,35 @@ class OrderController extends Controller
     private function formatOrder(Order $order): array
     {
         return [
-            'id' => $order->id,
-            'date' => $order->created_at?->toDateString(),
-            'status' => $order->status,
+            'id'             => $order->id,
+            'date'           => $order->created_at?->toDateString(),
+            'status'         => $order->status,
+            'shippingMethod' => $order->shipping_method ?? 'delivery',
             'items' => $order->items->map(fn ($item) => [
                 'product' => [
-                    'id' => $item->product_id,
-                    'name' => $item->product_name,
-                    'image' => $item->product_image,
-                    'brand' => $item->product_brand,
-                    'category' => $item->product_category,
-                    'price' => (int) $item->price,
-                    'rating' => 0,
+                    'id'          => $item->product_id,
+                    'name'        => $item->product_name,
+                    'image'       => $item->product_image,
+                    'brand'       => $item->product_brand,
+                    'category'    => $item->product_category,
+                    'price'       => (int) $item->price,
+                    'rating'      => 0,
                     'reviewCount' => 0,
-                    'stock' => 0,
+                    'stock'       => 0,
                     'description' => '',
-                    'features' => [],
-                    'specs' => [],
+                    'features'    => [],
+                    'specs'       => [],
                 ],
-                'quantity' => (int) $item->quantity,
-                'price' => (int) $item->price,
+                'quantity'      => (int) $item->quantity,
+                'price'         => (int) $item->price,
                 'customization' => $item->customization,
             ]),
-            'subtotal' => (int) $order->subtotal,
-            'shipping' => (int) $order->shipping,
-            'discount' => (int) $order->discount,
-            'total' => (int) $order->total,
-            'address' => $order->address,
-            'paymentMethod' => $order->payment_method,
+            'subtotal'       => (int) $order->subtotal,
+            'shipping'       => (int) $order->shipping,
+            'discount'       => (int) $order->discount,
+            'total'          => (int) $order->total,
+            'address'        => $order->address,
+            'paymentMethod'  => $order->payment_method,
             'trackingNumber' => $order->tracking_number,
         ];
     }

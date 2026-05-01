@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, Package, ChevronRight, Truck, CheckCircle, Clock, XCircle, Star } from 'lucide-react';
+import { ArrowLeft, Package, ChevronRight, Truck, CheckCircle, Clock, XCircle, Star, Store } from 'lucide-react';
 import { formatCurrency, formatDate, type Order } from '../../data/mockData';
 import { fetchMyOrders } from '../../services/orderApi';
 import { toast } from 'sonner';
 
 const STATUS_MAP = {
-  pending: { label: 'Pending', color: '#F59E0B', bg: 'rgba(245,158,11,0.12)', icon: Clock },
-  processing: { label: 'Processing', color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', icon: Package },
-  shipped: { label: 'Shipped', color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)', icon: Truck },
-  delivered: { label: 'Delivered', color: '#10B981', bg: 'rgba(16,185,129,0.12)', icon: CheckCircle },
-  cancelled: { label: 'Cancelled', color: '#EF4444', bg: 'rgba(239,68,68,0.12)', icon: XCircle },
+  pending: { label: 'Menunggu', color: '#F59E0B', bg: 'rgba(245,158,11,0.12)', icon: Clock },
+  processing: { label: 'Diproses', color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', icon: Package },
+  shipped: { label: 'Dikirim', color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)', icon: Truck },
+  delivered: { label: 'Terkirim', color: '#10B981', bg: 'rgba(16,185,129,0.12)', icon: CheckCircle },
+  cancelled: { label: 'Dibatalkan', color: '#EF4444', bg: 'rgba(239,68,68,0.12)', icon: XCircle },
 };
 
-const TABS = ['All', 'Active', 'Delivered', 'Cancelled'];
+const TABS = ['Semua', 'Aktif', 'Terkirim', 'Dibatalkan'];
 
 export default function Orders() {
   const navigate = useNavigate();
@@ -54,10 +54,10 @@ export default function Orders() {
   }, []);
 
   const filtered = orders.filter(o => {
-    if (activeTab === 'All') return true;
-    if (activeTab === 'Active') return ['pending', 'processing', 'shipped'].includes(o.status);
-    if (activeTab === 'Delivered') return o.status === 'delivered';
-    if (activeTab === 'Cancelled') return o.status === 'cancelled';
+    if (activeTab === 'Semua') return true;
+    if (activeTab === 'Aktif') return ['pending', 'processing', 'shipped'].includes(o.status);
+    if (activeTab === 'Terkirim') return o.status === 'delivered';
+    if (activeTab === 'Dibatalkan') return o.status === 'cancelled';
     return true;
   });
 
@@ -69,7 +69,7 @@ export default function Orders() {
           <button onClick={() => navigate('/profile')} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: '#F1F5F9', border: '1px solid #E2E8F0' }}>
             <ArrowLeft size={18} style={{ color: '#0F172A' }} />
           </button>
-          <h1 className="font-bold text-lg" style={{ color: '#0F172A' }}>My Orders</h1>
+          <h1 className="font-bold text-lg" style={{ color: '#0F172A' }}>Pesanan Saya</h1>
         </div>
 
         {/* Tabs */}
@@ -97,7 +97,7 @@ export default function Orders() {
 
         {loading && (
           <div className="rounded-2xl p-4 text-sm" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#64748B' }}>
-            Loading orders...
+            Loading pesanan...
           </div>
         )}
 
@@ -106,8 +106,8 @@ export default function Orders() {
             <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3" style={{ background: '#F1F5F9' }}>
               <Package size={32} style={{ color: '#CBD5E1' }} />
             </div>
-            <p className="font-medium mb-1" style={{ color: '#0F172A' }}>No orders found</p>
-            <p className="text-sm" style={{ color: '#94A3B8' }}>Start shopping to see your orders here</p>
+            <p className="font-medium mb-1" style={{ color: '#0F172A' }}>Belum ada pesanan</p>
+            <p className="text-sm" style={{ color: '#94A3B8' }}>Mulai belanja untuk melihat pesanan di sini</p>
           </div>
         ) : !loading && (
           filtered.map(order => {
@@ -121,9 +121,21 @@ export default function Orders() {
                     <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>{order.id}</p>
                     <p className="text-xs" style={{ color: '#94A3B8' }}>{formatDate(order.date)}</p>
                   </div>
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: statusInfo.bg }}>
-                    <StatusIcon size={11} style={{ color: statusInfo.color }} />
-                    <span className="text-xs font-medium" style={{ color: statusInfo.color }}>{statusInfo.label}</span>
+                  <div className="flex items-center gap-2">
+                    {(order as Order & { shippingMethod?: string }).shippingMethod && (
+                      <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full"
+                        style={(order as Order & { shippingMethod?: string }).shippingMethod === 'pickup'
+                          ? { background: 'rgba(139,92,246,0.1)', color: '#7C3AED' }
+                          : { background: 'rgba(14,165,233,0.1)', color: '#0EA5E9' }}>
+                        {(order as Order & { shippingMethod?: string }).shippingMethod === 'pickup'
+                          ? <><Store size={10}/>Ambil</>
+                          : <><Truck size={10}/>Kirim</>}
+                      </span>
+                    )}
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: statusInfo.bg }}>
+                      <StatusIcon size={11} style={{ color: statusInfo.color }} />
+                      <span className="text-xs font-medium" style={{ color: statusInfo.color }}>{statusInfo.label}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -134,7 +146,7 @@ export default function Orders() {
                       <img src={item.product.image} alt={item.product.name} className="w-12 h-12 rounded-xl object-cover" />
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium line-clamp-1" style={{ color: '#0F172A' }}>{item.product.name}</p>
-                        <p className="text-xs" style={{ color: '#94A3B8' }}>Qty: {item.quantity} · {item.product.brand}</p>
+                        <p className="text-xs" style={{ color: '#94A3B8' }}>Jml: {item.quantity} · {item.product.brand}</p>
                       </div>
                       <p className="text-sm font-semibold" style={{ color: '#0F172A' }}>{formatCurrency(item.price * item.quantity)}</p>
                     </div>
@@ -145,12 +157,12 @@ export default function Orders() {
                 <div className="px-4 py-3 border-t" style={{ borderColor: '#F1F5F9' }}>
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <p className="text-xs" style={{ color: '#94A3B8' }}>Total ({order.items.length} items)</p>
+                      <p className="text-xs" style={{ color: '#94A3B8' }}>Total ({order.items.length} produk)</p>
                       <p className="font-bold" style={{ color: '#1D4ED8' }}>{formatCurrency(order.total)}</p>
                     </div>
                     {order.trackingNumber && (
                       <div className="text-right">
-                        <p className="text-xs" style={{ color: '#94A3B8' }}>Tracking</p>
+                        <p className="text-xs" style={{ color: '#94A3B8' }}>No. Resi</p>
                         <p className="text-xs font-medium" style={{ color: '#0EA5E9' }}>{order.trackingNumber}</p>
                       </div>
                     )}
@@ -174,7 +186,7 @@ export default function Orders() {
                         onClick={() => setDetailOpen(detailOpen === order.id ? null : order.id)}
                         className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg"
                         style={{ background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0' }}>
-                        {detailOpen === order.id ? 'Hide Details' : 'Details'}
+                        {detailOpen === order.id ? 'Sembunyikan' : 'Detail'}
                         <ChevronRight size={11} style={{ transform: detailOpen === order.id ? 'rotate(90deg)' : 'none' }} />
                       </button>
                     </div>
@@ -182,7 +194,7 @@ export default function Orders() {
 
                   {detailOpen === order.id && (
                     <div className="mt-3 p-3 rounded-xl space-y-2" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-                      <p className="text-xs font-semibold" style={{ color: '#0F172A' }}>Order Details</p>
+                      <p className="text-xs font-semibold" style={{ color: '#0F172A' }}>Detail Pesanan</p>
 
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
@@ -190,32 +202,32 @@ export default function Orders() {
                           <p style={{ color: '#0F172A' }}>{order.id}</p>
                         </div>
                         <div>
-                          <p style={{ color: '#94A3B8' }}>Date</p>
+                          <p style={{ color: '#94A3B8' }}>Tanggal</p>
                           <p style={{ color: '#0F172A' }}>{formatDate(order.date)}</p>
                         </div>
                         <div>
-                          <p style={{ color: '#94A3B8' }}>Payment</p>
+                          <p style={{ color: '#94A3B8' }}>Pembayaran</p>
                           <p style={{ color: '#0F172A' }}>{order.paymentMethod}</p>
                         </div>
                         <div>
-                          <p style={{ color: '#94A3B8' }}>Tracking</p>
+                          <p style={{ color: '#94A3B8' }}>No. Resi</p>
                           <p style={{ color: '#0F172A' }}>{order.trackingNumber || '-'}</p>
                         </div>
                       </div>
 
                       <div className="pt-2 border-t" style={{ borderColor: '#E2E8F0' }}>
-                        <p className="text-xs mb-1" style={{ color: '#94A3B8' }}>Delivery Address</p>
+                        <p className="text-xs mb-1" style={{ color: '#94A3B8' }}>Alamat Pengiriman</p>
                         <p className="text-xs" style={{ color: '#0F172A' }}>{order.address}</p>
                       </div>
 
                       <div className="pt-2 border-t" style={{ borderColor: '#E2E8F0' }}>
-                        <p className="text-xs mb-2" style={{ color: '#94A3B8' }}>Items</p>
+                        <p className="text-xs mb-2" style={{ color: '#94A3B8' }}>Produk</p>
                         <div className="space-y-2">
                           {order.items.map((item, idx) => (
                             <div key={`${order.id}-${idx}`} className="flex items-start justify-between text-xs">
                               <div>
                                 <p style={{ color: '#0F172A' }}>{item.product.name}</p>
-                                <p style={{ color: '#94A3B8' }}>Qty {item.quantity} x {formatCurrency(item.price)}</p>
+                                <p style={{ color: '#94A3B8' }}>Jml {item.quantity} x {formatCurrency(item.price)}</p>
                                 {item.customization && (
                                   <p style={{ color: '#94A3B8' }}>
                                     {item.customization.stringType ? `String: ${item.customization.stringType}` : ''}
@@ -231,9 +243,9 @@ export default function Orders() {
 
                       <div className="pt-2 border-t space-y-1 text-xs" style={{ borderColor: '#E2E8F0' }}>
                         <div className="flex justify-between"><span style={{ color: '#94A3B8' }}>Subtotal</span><span style={{ color: '#0F172A' }}>{formatCurrency(order.subtotal)}</span></div>
-                        <div className="flex justify-between"><span style={{ color: '#94A3B8' }}>Shipping</span><span style={{ color: '#0F172A' }}>{formatCurrency(order.shipping)}</span></div>
-                        <div className="flex justify-between"><span style={{ color: '#94A3B8' }}>Discount</span><span style={{ color: '#10B981' }}>-{formatCurrency(order.discount ?? 0)}</span></div>
-                        <div className="flex justify-between pt-1" style={{ borderTop: '1px dashed #E2E8F0' }}><span style={{ color: '#0F172A' }}>Grand Total</span><span style={{ color: '#1D4ED8', fontWeight: 700 }}>{formatCurrency(order.total)}</span></div>
+                        <div className="flex justify-between"><span style={{ color: '#94A3B8' }}>Ongkos Kirim</span><span style={{ color: '#0F172A' }}>{formatCurrency(order.shipping)}</span></div>
+                        <div className="flex justify-between"><span style={{ color: '#94A3B8' }}>Diskon</span><span style={{ color: '#10B981' }}>-{formatCurrency(order.discount ?? 0)}</span></div>
+                        <div className="flex justify-between pt-1" style={{ borderTop: '1px dashed #E2E8F0' }}><span style={{ color: '#0F172A' }}>Total Akhir</span><span style={{ color: '#1D4ED8', fontWeight: 700 }}>{formatCurrency(order.total)}</span></div>
                       </div>
                     </div>
                   )}
@@ -241,7 +253,7 @@ export default function Orders() {
                   {/* Review Panel */}
                   {reviewOpen === order.id && (
                     <div className="mt-3 p-3 rounded-xl" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-                      <p className="text-xs font-medium mb-2" style={{ color: '#0F172A' }}>Rate your purchase</p>
+                      <p className="text-xs font-medium mb-2" style={{ color: '#0F172A' }}>Beri penilaian</p>
                       <div className="flex gap-1 mb-2">
                         {[1,2,3,4,5].map(s => (
                           <button key={s} onClick={() => setRating(s)}>
@@ -249,12 +261,12 @@ export default function Orders() {
                           </button>
                         ))}
                       </div>
-                      <textarea placeholder="Write your review..." rows={2} className="w-full text-xs p-2.5 rounded-lg outline-none resize-none"
+                      <textarea placeholder="Tulis ulasan kamu..." rows={2} className="w-full text-xs p-2.5 rounded-lg outline-none resize-none"
                         style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#0F172A' }} />
                       <button onClick={() => { setReviewOpen(null); toast.success('Review submitted! +50 pts earned 🌟'); }}
                         className="mt-2 w-full py-2 rounded-lg text-white text-xs font-semibold"
                         style={{ background: 'linear-gradient(135deg, #1D4ED8, #2563EB)' }}>
-                        Submit Review
+                        Kirim Ulasan
                       </button>
                     </div>
                   )}

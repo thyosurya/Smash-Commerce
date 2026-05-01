@@ -46,7 +46,7 @@ export default function Login() {
       toast.success('Welcome back! 🏸');
       navigate(user.isAdmin ? '/admin' : '/', { replace: true });
     } else {
-      setError('Invalid email or password. Coba akun demo di bawah.');
+      setError('Email atau password salah. Coba akun demo di bawah.');
     }
   };
 
@@ -76,13 +76,13 @@ export default function Login() {
             <Zap size={32} className="text-white" />
           </div>
           <h1 className="text-white text-2xl font-bold tracking-tight">Smash Commerce</h1>
-          <p className="text-sm mt-1" style={{ color: '#64748B' }}>Your ultimate badminton store</p>
+          <p className="text-sm mt-1" style={{ color: '#64748B' }}>Toko badminton terbaik kamu</p>
         </div>
 
         {/* Card */}
         <div className="w-full max-w-sm rounded-3xl p-6" style={{ background: '#0F1F3D', border: '1px solid #1E3A6E' }}>
-          <h2 className="text-white font-semibold text-lg mb-1">Welcome back 👋</h2>
-          <p className="text-sm mb-6" style={{ color: '#64748B' }}>Sign in to continue shopping</p>
+          <h2 className="text-white font-semibold text-lg mb-1">Selamat datang kembali 👋</h2>
+          <p className="text-sm mb-6" style={{ color: '#64748B' }}>Masuk untuk lanjut belanja</p>
 
           {error && (
             <div className="flex items-start gap-2 p-3 rounded-xl mb-4 text-sm" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#FCA5A5' }}>
@@ -94,7 +94,7 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Email Address</label>
+              <label className="text-xs font-medium mb-1.5 block" style={{ color: '#94A3B8' }}>Alamat Email</label>
               <div className="relative">
                 <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748B' }} />
                 <input
@@ -115,7 +115,7 @@ export default function Login() {
                 <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#64748B' }} />
                 <input
                   type={showPw ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required
-                  placeholder="Enter password"
+                  placeholder="Masukkan password"
                   className="w-full pl-10 pr-10 py-3 rounded-xl text-sm outline-none transition-all"
                   style={{ background: '#162040', border: '1px solid #1E3A6E', color: '#F1F5F9' }}
                   onFocus={e => e.currentTarget.style.borderColor = '#22D3EE'}
@@ -129,7 +129,7 @@ export default function Login() {
             </div>
 
             <div className="flex justify-end">
-              <Link to="/forgot-password" className="text-xs" style={{ color: '#22D3EE' }}>Forgot password?</Link>
+              <Link to="/forgot-password" className="text-xs" style={{ color: '#22D3EE' }}>Lupa password?</Link>
             </div>
 
             <button
@@ -140,7 +140,7 @@ export default function Login() {
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                <><span>Sign In</span><ChevronRight size={16} /></>
+                <><span>Masuk</span><ChevronRight size={16} /></>
               )}
             </button>
           </form>
@@ -148,18 +148,18 @@ export default function Login() {
           {/* Trust badges */}
           <div className="flex items-center justify-center gap-3 mt-4">
             <div className="flex items-center gap-1 text-[10px]" style={{ color: '#64748B' }}>
-              <Shield size={10} style={{ color: '#10B981' }} /> SSL Encrypted
+              <Shield size={10} style={{ color: '#10B981' }} /> Enkripsi SSL
             </div>
             <div className="w-px h-3" style={{ background: '#1E3A6E' }} />
             <div className="flex items-center gap-1 text-[10px]" style={{ color: '#64748B' }}>
-              <Shield size={10} style={{ color: '#10B981' }} /> Data Protected
+              <Shield size={10} style={{ color: '#10B981' }} /> Data Terlindungi
             </div>
           </div>
         </div>
 
         <p className="text-sm mt-5" style={{ color: '#64748B' }}>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#22D3EE' }} className="font-medium">Create Account</Link>
+          Belum punya akun?{' '}
+          <Link to="/register" style={{ color: '#22D3EE' }} className="font-medium">Buat Akun</Link>
         </p>
 
         {/* Role selector */}
@@ -183,7 +183,7 @@ export default function Login() {
               </div>
               <div className="text-center">
                 <p className="text-xs font-semibold" style={{ color: '#22D3EE' }}>User</p>
-                <p className="text-[9px] mt-0.5" style={{ color: '#334155' }}>Shop & orders</p>
+                <p className="text-[9px] mt-0.5" style={{ color: '#334155' }}>Belanja & pesanan</p>
               </div>
               <div className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(34,211,238,0.08)', color: '#22D3EE', border: '1px solid rgba(34,211,238,0.15)' }}>
                 user@smash.com

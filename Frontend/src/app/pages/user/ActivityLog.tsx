@@ -14,10 +14,10 @@ type ActivityItem = {
 };
 
 const TYPE_CONFIG = {
-  cart: { icon: ShoppingCart, label: 'Added to Cart', color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)' },
-  purchase: { icon: Package, label: 'Purchased', color: '#10B981', bg: 'rgba(16,185,129,0.1)' },
-  review: { icon: Star, label: 'Reviewed', color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' },
-  points: { icon: Gift, label: 'Points Earned', color: '#1D4ED8', bg: 'rgba(29,78,216,0.1)' },
+  cart: { icon: ShoppingCart, label: 'Ditambahkan ke Keranjang', color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)' },
+  purchase: { icon: Package, label: 'Dibeli', color: '#10B981', bg: 'rgba(16,185,129,0.1)' },
+  review: { icon: Star, label: 'Diulas', color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' },
+  points: { icon: Gift, label: 'Poin Diterima', color: '#1D4ED8', bg: 'rgba(29,78,216,0.1)' },
 };
 
 function timeAgo(ts: string) {
@@ -112,8 +112,8 @@ export default function ActivityLog() {
             <ArrowLeft size={18} style={{ color: '#0F172A' }} />
           </button>
           <div>
-            <h1 className="font-bold text-lg" style={{ color: '#0F172A' }}>Activity Log</h1>
-            <p className="text-xs" style={{ color: '#94A3B8' }}>Your recent interactions</p>
+            <h1 className="font-bold text-lg" style={{ color: '#0F172A' }}>Log Aktivitas</h1>
+            <p className="text-xs" style={{ color: '#94A3B8' }}>Interaksi kamu terbaru</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ export default function ActivityLog() {
         <div className="space-y-6">
           {loading && (
             <div className="rounded-2xl p-3 text-xs" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#64748B' }}>
-              Loading activity...
+              Loading aktivitas...
             </div>
           )}
 

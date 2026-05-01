@@ -14,14 +14,16 @@ class CrmSetting extends Model
         'weekend_bonus_multiplier',
         'review_bonus',
         'first_order_bonus',
+        'stringing_service_fee',
         'tiers',
     ];
 
     protected $casts = [
-        'points_per_10000' => 'integer',
+        'points_per_10000'         => 'integer',
         'weekend_bonus_multiplier' => 'integer',
-        'review_bonus' => 'integer',
-        'first_order_bonus' => 'integer',
-        'tiers' => 'array',
+        'review_bonus'             => 'integer',
+        'first_order_bonus'        => 'integer',
+        'stringing_service_fee'    => 'integer',
+        'tiers'                    => 'array',
     ];
 }

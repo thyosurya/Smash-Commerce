@@ -33,8 +33,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="px-3 py-2 rounded-xl text-xs shadow-xl" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
         <p className="font-medium mb-1" style={{ color: '#0F172A' }}>{label}</p>
-        <p style={{ color: '#1D4ED8' }}>Rp {(payload[0].value / 1000000).toFixed(1)}M</p>
-        <p style={{ color: '#94A3B8' }}>{payload[1]?.value} orders</p>
+        <p style={{ color: '#94A3B8' }}>Rp {(payload[0].value / 1000000).toFixed(1)}M</p>
+        <p style={{ color: '#94A3B8' }}>{payload[1]?.value} pesanan</p>
       </div>
     );
   }
@@ -79,7 +79,7 @@ export default function Dashboard() {
   const stats = useMemo(
     () => [
       {
-        label: 'Inventory Value',
+        label: 'Nilai Inventaris',
         value: formatCurrency(dashboard.summary.inventoryValue),
         change: `${formatCompactNumber(dashboard.dailySales.reduce((sum, point) => sum + point.sales, 0))} / 7h`,
         up: true,
@@ -88,7 +88,7 @@ export default function Dashboard() {
         sub: 'Nilai total stok produk',
       },
       {
-        label: 'Total User Points',
+        label: 'Total Poin Pengguna',
         value: dashboard.summary.totalUserPoints.toLocaleString('id-ID'),
         change: `${dashboard.summary.pointsLast7Days.toLocaleString('id-ID')} / 7h`,
         up: true,
@@ -97,7 +97,7 @@ export default function Dashboard() {
         sub: 'Akumulasi poin seluruh user',
       },
       {
-        label: 'Active Users',
+        label: 'Pengguna Aktif',
         value: dashboard.summary.activeUsers.toLocaleString('id-ID'),
         change: 'Role user aktif',
         up: true,
@@ -106,9 +106,9 @@ export default function Dashboard() {
         sub: 'Total user non-admin',
       },
       {
-        label: 'Total Products',
+        label: 'Total Produk',
         value: dashboard.summary.totalProducts.toLocaleString('id-ID'),
-        change: `${dashboard.summary.lowStockProducts.toLocaleString('id-ID')} low stock`,
+        change: `${dashboard.summary.lowStockProducts.toLocaleString('id-ID')} stok menipis`,
         up: true,
         icon: Package,
         color: '#F59E0B',
@@ -178,7 +178,7 @@ export default function Dashboard() {
             <p className="text-xs" style={{ color: '#94A3B8' }}>7 hari terakhir (produk & user baru)</p>
           </div>
           <button onClick={() => navigate('/admin/reports')} className="flex items-center gap-1 text-xs font-medium" style={{ color: '#1D4ED8' }}>
-            Full Report <ChevronRight size={13} />
+            Laporan Lengkap <ChevronRight size={13} />
           </button>
         </div>
         <ResponsiveContainer width="100%" height={180}>
@@ -201,7 +201,7 @@ export default function Dashboard() {
       {/* Monthly Summary */}
       <div className="rounded-2xl p-4 bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold" style={{ color: '#0F172A' }}>Monthly Inventory Value</h3>
+          <h3 className="font-semibold" style={{ color: '#0F172A' }}>Nilai Inventaris Bulanan</h3>
           <BarChart3 size={16} style={{ color: '#94A3B8' }} />
         </div>
         <div className="space-y-2">
@@ -224,9 +224,9 @@ export default function Dashboard() {
       {/* Top Products */}
       <div className="rounded-2xl p-4 bg-white" style={{ border: '1px solid #E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold" style={{ color: '#0F172A' }}>Top Products (Review-Based)</h3>
+          <h3 className="font-semibold" style={{ color: '#0F172A' }}>Produk Teratas (Berdasarkan Ulasan)</h3>
           <button onClick={() => navigate('/admin/users')} className="flex items-center gap-1 text-xs font-medium" style={{ color: '#1D4ED8' }}>
-            Analytics <ChevronRight size={13} />
+            Analitik <ChevronRight size={13} />
           </button>
         </div>
         <div className="space-y-2.5">
@@ -242,7 +242,7 @@ export default function Dashboard() {
                   <span className="flex items-center gap-0.5 text-[10px]" style={{ color: '#0EA5E9' }}>
                     <Eye size={9} /> {tp.views.toLocaleString()}
                   </span>
-                  <span className="text-[10px]" style={{ color: '#94A3B8' }}>→ {tp.purchases.toLocaleString()} sold</span>
+                  <span className="text-[10px]" style={{ color: '#94A3B8' }}>→ {tp.purchases.toLocaleString()} terjual</span>
                 </div>
               </div>
               <span className="text-xs font-medium" style={{ color: '#10B981' }}>{formatCurrency(tp.product.price * tp.purchases).split(',')[0]}M</span>
@@ -258,10 +258,10 @@ export default function Dashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: 'Add Product', path: '/admin/products', color: '#0EA5E9', icon: Package },
-          { label: 'View Reports', path: '/admin/reports', color: '#10B981', icon: TrendingUp },
-          { label: 'User Analytics', path: '/admin/users', color: '#8B5CF6', icon: Users },
-          { label: 'Audit Log', path: '/admin/audit', color: '#F59E0B', icon: BarChart3 },
+          { label: 'Tambah Produk', path: '/admin/products', color: '#0EA5E9', icon: Package },
+          { label: 'Lihat Laporan', path: '/admin/reports', color: '#10B981', icon: TrendingUp },
+          { label: 'Analitik Pengguna', path: '/admin/users', color: '#8B5CF6', icon: Users },
+          { label: 'Log Audit', path: '/admin/audit', color: '#F59E0B', icon: BarChart3 },
         ].map(({ label, path, color, icon: Icon }) => (
           <button key={label} onClick={() => navigate(path)}
             className="flex items-center gap-2 p-3.5 rounded-2xl text-sm font-medium text-left transition-colors hover:shadow-md bg-white"

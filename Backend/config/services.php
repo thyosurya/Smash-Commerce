@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    // Fonnte WhatsApp Gateway
+    // Env key: FONNTE_API_TOKEN (support typo FONTE_API_TOKEN juga)
+    'fonnte' => [
+        'token' => env('FONNTE_API_TOKEN', env('FONTE_API_TOKEN', '')),
+        'url'   => env('FONNTE_BASE_API', 'https://api.fonnte.com/send'),
+    ],
+
 ];

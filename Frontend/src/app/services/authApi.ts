@@ -2,6 +2,7 @@ export interface ApiUser {
   id: number;
   name: string;
   email: string;
+  phone?: string | null;
   role: 'admin' | 'user';
   points: number;
   joinedAt?: string;
@@ -110,4 +111,26 @@ export async function logoutApi(token: string): Promise<void> {
   if (!response.ok) {
     throw await parseApiError(response, 'Logout gagal.');
   }
+}
+
+export async function updateProfileApi(
+  token: string,
+  payload: { name?: string; phone?: string | null }
+): Promise<ApiUser> {
+  const response = await fetch('/api/auth/profile', {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw await parseApiError(response, 'Gagal memperbarui profil.');
+  }
+
+  const json = (await response.json()) as { data: ApiUser };
+  return json.data;
 }
