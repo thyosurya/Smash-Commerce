@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
-    private const VALID_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+    private const VALID_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'ready_for_pickup', 'picked_up'];
 
     /**
      * List all orders (admin view) with optional filters.
@@ -60,6 +60,7 @@ class OrderController extends Controller
     {
         $order = Order::query()->with(['items', 'user'])->findOrFail($id);
         $previousStatus = $order->status;
+        $previousTracking = $order->tracking_number;
 
         $validated = $request->validate([
             'status'          => ['required', Rule::in(self::VALID_STATUSES)],
@@ -99,7 +100,9 @@ class OrderController extends Controller
 
         // ── Kirim notifikasi WA ke pelanggan (async) ──────────────────
         $customerPhone = $order->user?->phone ?? '';
-        if (!empty(trim($customerPhone)) && $validated['status'] !== $previousStatus) {
+        $trackingChanged = array_key_exists('trackingNumber', $validated) && $validated['trackingNumber'] !== $previousTracking;
+
+        if (!empty(trim($customerPhone)) && ($validated['status'] !== $previousStatus || $trackingChanged)) {
             SendOrderWhatsApp::dispatch(
                 $order->id,
                 $validated['status'],
@@ -124,12 +127,14 @@ class OrderController extends Controller
 
         return response()->json([
             'data' => [
-                'pending'    => (int) ($counts['pending']    ?? 0),
-                'processing' => (int) ($counts['processing'] ?? 0),
-                'shipped'    => (int) ($counts['shipped']    ?? 0),
-                'delivered'  => (int) ($counts['delivered']  ?? 0),
-                'cancelled'  => (int) ($counts['cancelled']  ?? 0),
-                'total'      => (int) $counts->sum(),
+                'pending'          => (int) ($counts['pending']          ?? 0),
+                'processing'       => (int) ($counts['processing']       ?? 0),
+                'shipped'          => (int) ($counts['shipped']          ?? 0),
+                'delivered'        => (int) ($counts['delivered']        ?? 0),
+                'ready_for_pickup' => (int) ($counts['ready_for_pickup'] ?? 0),
+                'picked_up'        => (int) ($counts['picked_up']        ?? 0),
+                'cancelled'        => (int) ($counts['cancelled']        ?? 0),
+                'total'            => (int) $counts->sum(),
             ],
         ]);
     }

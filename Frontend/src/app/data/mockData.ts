@@ -45,7 +45,7 @@ export interface Review {
 export interface Order {
   id: string;
   date: string;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'ready_for_pickup' | 'picked_up' | 'cancelled';
   items: {
     product: Product;
     quantity: number;

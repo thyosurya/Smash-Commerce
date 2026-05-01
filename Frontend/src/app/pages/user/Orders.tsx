@@ -10,8 +10,10 @@ const STATUS_MAP = {
   processing: { label: 'Diproses', color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', icon: Package },
   shipped: { label: 'Dikirim', color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)', icon: Truck },
   delivered: { label: 'Terkirim', color: '#10B981', bg: 'rgba(16,185,129,0.12)', icon: CheckCircle },
+  ready_for_pickup: { label: 'Siap Diambil', color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)', icon: Store },
+  picked_up: { label: 'Telah Diambil', color: '#10B981', bg: 'rgba(16,185,129,0.12)', icon: CheckCircle },
   cancelled: { label: 'Dibatalkan', color: '#EF4444', bg: 'rgba(239,68,68,0.12)', icon: XCircle },
-};
+} as Record<string, any>;
 
 const TABS = ['Semua', 'Aktif', 'Terkirim', 'Dibatalkan'];
 
@@ -55,8 +57,8 @@ export default function Orders() {
 
   const filtered = orders.filter(o => {
     if (activeTab === 'Semua') return true;
-    if (activeTab === 'Aktif') return ['pending', 'processing', 'shipped'].includes(o.status);
-    if (activeTab === 'Terkirim') return o.status === 'delivered';
+    if (activeTab === 'Aktif') return ['pending', 'processing', 'shipped', 'ready_for_pickup'].includes(o.status);
+    if (activeTab === 'Terkirim') return ['delivered', 'picked_up'].includes(o.status);
     if (activeTab === 'Dibatalkan') return o.status === 'cancelled';
     return true;
   });
@@ -175,7 +177,7 @@ export default function Orders() {
                     </span>
 
                     <div className="flex gap-2">
-                      {order.status === 'delivered' && (
+                      {['delivered', 'picked_up'].includes(order.status) && (
                         <button onClick={() => setReviewOpen(reviewOpen === order.id ? null : order.id)}
                           className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg"
                           style={{ background: 'rgba(245,158,11,0.1)', color: '#F59E0B', border: '1px solid rgba(245,158,11,0.2)' }}>

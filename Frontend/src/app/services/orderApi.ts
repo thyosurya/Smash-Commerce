@@ -19,6 +19,8 @@ export interface OrderStats {
   processing: number;
   shipped: number;
   delivered: number;
+  ready_for_pickup: number;
+  picked_up: number;
   cancelled: number;
   total: number;
 }

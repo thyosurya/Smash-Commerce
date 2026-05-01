@@ -5,17 +5,24 @@ import { fetchAdminOrders, fetchOrderStats, updateOrderStatus, type AdminOrder, 
 import { formatCurrency, formatDate } from '../../data/mockData';
 
 const STATUS_CFG = {
-  pending:    { label: 'Menunggu',  color: '#F59E0B', bg: 'rgba(245,158,11,0.12)',  icon: Clock },
-  processing: { label: 'Diproses', color: '#3B82F6', bg: 'rgba(59,130,246,0.12)',  icon: Package },
-  shipped:    { label: 'Dikirim',  color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)',  icon: Truck },
-  delivered:  { label: 'Terkirim',color: '#10B981', bg: 'rgba(16,185,129,0.12)', icon: CheckCircle },
-  cancelled:  { label: 'Dibatalkan',color:'#EF4444', bg: 'rgba(239,68,68,0.12)',  icon: XCircle },
+  pending:          { label: 'Menunggu',  color: '#F59E0B', bg: 'rgba(245,158,11,0.12)',  icon: Clock },
+  processing:       { label: 'Diproses', color: '#3B82F6', bg: 'rgba(59,130,246,0.12)',  icon: Package },
+  shipped:          { label: 'Dikirim',  color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)',  icon: Truck },
+  delivered:        { label: 'Terkirim',color: '#10B981', bg: 'rgba(16,185,129,0.12)', icon: CheckCircle },
+  ready_for_pickup: { label: 'Siap Diambil', color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)', icon: Store },
+  picked_up:        { label: 'Telah Diambil',color: '#10B981', bg: 'rgba(16,185,129,0.12)', icon: CheckCircle },
+  cancelled:        { label: 'Dibatalkan',color:'#EF4444', bg: 'rgba(239,68,68,0.12)',  icon: XCircle },
 } as const;
 
 type StatusKey = keyof typeof STATUS_CFG;
 const STATUSES = Object.keys(STATUS_CFG) as StatusKey[];
-const NEXT_STATUS: Record<StatusKey, StatusKey | null> = {
-  pending: 'processing', processing: 'shipped', shipped: 'delivered', delivered: null, cancelled: null,
+
+const getNextStatus = (status: StatusKey, method: string): StatusKey | null => {
+  if (status === 'pending') return 'processing';
+  if (status === 'processing') return method === 'pickup' ? 'ready_for_pickup' : 'shipped';
+  if (status === 'shipped') return 'delivered';
+  if (status === 'ready_for_pickup') return 'picked_up';
+  return null;
 };
 
 /* ─── Status Edit Modal ──────────────────────────────────────────── */
@@ -175,11 +182,13 @@ export default function OrderManagement() {
 
       {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
           <StatCard label="Menunggu"   value={stats.pending}    color="#F59E0B" icon={Clock}/>
           <StatCard label="Diproses"   value={stats.processing} color="#3B82F6" icon={Package}/>
           <StatCard label="Dikirim"    value={stats.shipped}    color="#0EA5E9" icon={Truck}/>
           <StatCard label="Terkirim"   value={stats.delivered}  color="#10B981" icon={CheckCircle}/>
+          <StatCard label="Siap Diambil" value={stats.ready_for_pickup} color="#8B5CF6" icon={Store}/>
+          <StatCard label="Diambil" value={stats.picked_up} color="#10B981" icon={CheckCircle}/>
           <StatCard label="Dibatalkan" value={stats.cancelled}  color="#EF4444" icon={XCircle}/>
         </div>
       )}
@@ -238,7 +247,7 @@ export default function OrderManagement() {
                 {orders.map(order => {
                   const cfg = STATUS_CFG[order.status as StatusKey] ?? STATUS_CFG.pending;
                   const Icon = cfg.icon;
-                  const next = NEXT_STATUS[order.status as StatusKey];
+                  const next = getNextStatus(order.status as StatusKey, order.shippingMethod);
                   const nextCfg = next ? STATUS_CFG[next] : null;
                   return (
                     <tr key={order.id} className="hover:bg-slate-50/60 transition">
